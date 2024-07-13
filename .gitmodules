@@ -1,0 +1,6 @@
+[submodule "mlopss"]
+	path = mlopss
+	url = https://github.com/mage-ai/mlops.git
+[submodule "orchestration"]
+	path = orchestration
+	url = https://github.com/mage-ai/mlops.git
