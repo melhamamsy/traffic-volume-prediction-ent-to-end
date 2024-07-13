@@ -1,17 +1,26 @@
-from typing import List, Tuple, Union
+"""
+Create a function to split on date_time
+"""
+
+
+from typing import Tuple, Union
 
 from pandas import DataFrame, Index
 
 
-def split_on_value(
+def split_on_date_time(
     df: DataFrame,
     feature: str,
-    value: Union[float, int, str],
+    year: Union[int, str],
     drop_feature: bool = True,
     return_indexes: bool = False,
 ) -> Union[Tuple[DataFrame, DataFrame], Tuple[Index, Index]]:
-    df_train = df[df[feature] < value]
-    df_val = df[df[feature] >= value]
+    df_train = df[
+        (df[feature].apply(lambda x: x.year) < int(year))
+    ]
+    df_val = df[
+        (df[feature].apply(lambda x: x.year) >= int(year))
+    ]
 
     if return_indexes:
         return df_train.index, df_val.index

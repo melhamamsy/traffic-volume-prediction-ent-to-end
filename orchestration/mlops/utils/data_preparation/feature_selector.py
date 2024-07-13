@@ -1,14 +1,33 @@
-from typing import List, Optional
+from typing import List, Tuple, Union
 
-import pandas as pd
-
-CATEGORICAL_FEATURES = ['PU_DO']
-NUMERICAL_FEATURES = ['trip_distance']
+from pandas import DataFrame, Series
 
 
-def select_features(df: pd.DataFrame, features: Optional[List[str]] = None) -> pd.DataFrame:
-    columns = CATEGORICAL_FEATURES + NUMERICAL_FEATURES
-    if features:
-        columns += features
+def select_features(
+    df: DataFrame,
+    columns: List
+) -> Union[DataFrame, Series]:
+    """
+    Select only passed columns
+
+    Parameters:
+    -----------
+    df : DataFrame
+        dataframe of interest
+
+    columns : List
+        columns to keep
+
+    Returns:
+    --------
+    DataFrame
+        same dataframe with needed columns only
+    """
+    if len(columns) == 1:
+        return df[columns[0]]
 
     return df[columns]
+
+
+
+
