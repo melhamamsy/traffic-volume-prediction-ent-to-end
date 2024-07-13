@@ -1,0 +1,117 @@
+blocks:
+- all_upstream_blocks_executed: true
+  color: null
+  configuration:
+    file_source:
+      path: orchestration/global_data_products/training_set.py
+    global_data_product:
+      uuid: training_set
+  downstream_blocks:
+  - plot_shap
+  - finetune
+  executor_config: null
+  executor_type: local_python
+  has_callback: false
+  language: python
+  name: training_set
+  retry_config: null
+  status: executed
+  timeout: null
+  type: global_data_product
+  upstream_blocks: []
+  uuid: training_set
+- all_upstream_blocks_executed: true
+  color: null
+  configuration:
+    file_source:
+      path: orchestration/custom/finetune.py
+  downstream_blocks:
+  - register_models
+  executor_config: null
+  executor_type: local_python
+  has_callback: false
+  language: python
+  name: finetune
+  retry_config: null
+  status: executed
+  timeout: null
+  type: custom
+  upstream_blocks:
+  - training_set
+  uuid: finetune
+- all_upstream_blocks_executed: true
+  color: null
+  configuration:
+    file_source:
+      path: orchestration/custom/register_models.py
+  downstream_blocks:
+  - plot_shap
+  executor_config: null
+  executor_type: local_python
+  has_callback: false
+  language: python
+  name: register_models
+  retry_config: null
+  status: executed
+  timeout: null
+  type: custom
+  upstream_blocks:
+  - finetune
+  uuid: register_models
+- all_upstream_blocks_executed: true
+  color: null
+  configuration:
+    file_source:
+      path: orchestration/custom/plot_shap.py
+  downstream_blocks: []
+  executor_config: null
+  executor_type: local_python
+  has_callback: false
+  language: python
+  name: plot_shap
+  retry_config: null
+  status: executed
+  timeout: null
+  type: custom
+  upstream_blocks:
+  - training_set
+  - register_models
+  uuid: plot_shap
+cache_block_output_in_memory: false
+callbacks: []
+concurrency_config: {}
+conditionals: []
+created_at: '2024-07-13 11:40:32.627028+00:00'
+data_integration: null
+description: finetune xgboost model using mlflow (EC2-postgres) -> create full sklearn
+  pipelines -> register pipelines to mlflow model registry
+executor_config: {}
+executor_count: 1
+executor_type: null
+extensions: {}
+name: xgboost_training
+notification_config: {}
+remote_variables_dir: null
+retry_config: {}
+run_pipeline_in_one_process: false
+settings:
+  triggers: null
+spark_config: {}
+tags: []
+type: python
+uuid: xgboost_training
+variables:
+  COLUMNS: holiday,temp,rain_1h,snow_1h,clouds_all,weather_main
+  DATE_TIME: date_time
+  IS_PLOT_SHAP: Y
+  IS_REGISTER_MODELS: Y
+  IS_RUN_FINE_TUNING: Y
+  MAX_EVALS: 100
+  MLFLOW_BUCKET_NAME: mlflow-artifacts-melhamamsy
+  MLFLOW_EXPERIMENT_NAME: traffic-volume-prediction-mage-2
+  N_BEST_MODELS: 2
+  TARGET: traffic_volume
+  TRACKING_SERVER_HOST: ec2-16-171-8-177.eu-north-1.compute.amazonaws.com
+  name_to_register_with: traffic-volume-predictor-2
+variables_dir: /home/src/mage_data/orchestration
+widgets: []

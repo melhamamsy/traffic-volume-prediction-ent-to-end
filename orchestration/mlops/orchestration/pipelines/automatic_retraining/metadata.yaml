@@ -1,0 +1,65 @@
+blocks:
+- all_upstream_blocks_executed: true
+  color: null
+  configuration:
+    file_source:
+      path: orchestration/sensors/detect_new_data.py
+  downstream_blocks:
+  - retrain/xgboost
+  executor_config: null
+  executor_type: local_python
+  has_callback: false
+  language: python
+  name: detect_new_data
+  retry_config: null
+  status: executed
+  timeout: null
+  type: sensor
+  upstream_blocks: []
+  uuid: detect_new_data
+- all_upstream_blocks_executed: true
+  color: null
+  configuration:
+    file_source:
+      path: orchestration/custom/retrain/xgboost.py
+  downstream_blocks: []
+  executor_config: null
+  executor_type: local_python
+  has_callback: false
+  language: python
+  name: retrain/xgboost
+  retry_config: null
+  status: updated
+  timeout: null
+  type: custom
+  upstream_blocks:
+  - detect_new_data
+  uuid: retrain/xgboost
+cache_block_output_in_memory: false
+callbacks: []
+concurrency_config: {}
+conditionals: []
+created_at: '2024-07-13 12:30:08.785220+00:00'
+data_integration: null
+description: Retrain model_training pipelines, currently there's one but more could
+  be added
+executor_config: {}
+executor_count: 1
+executor_type: null
+extensions: {}
+name: automatic_retraining
+notification_config: {}
+remote_variables_dir: null
+retry_config: {}
+run_pipeline_in_one_process: false
+settings:
+  triggers: null
+spark_config: {}
+tags: []
+type: python
+uuid: automatic_retraining
+variables:
+  BUCKET_NAME: data-melhamamsy
+  STATE_FILE: s3_state.json
+variables_dir: /home/src/mage_data/orchestration
+widgets: []

@@ -1,0 +1,21 @@
+triggers:
+- description: null
+  envs: []
+  last_enabled_at: 2024-07-13 13:03:36.304518+00:00
+  name: Retrain models daily
+  pipeline_uuid: automatic_retraining
+  schedule_interval: '@daily'
+  schedule_type: time
+  settings:
+    allow_blocks_to_fail: true
+    create_initial_pipeline_run: true
+    skip_if_previous_running: true
+    timeout: '10'
+    timeout_status: cancelled
+  sla: null
+  start_time: 2024-07-12 21:00:00+00:00
+  status: active
+  token: a13c9995d0d341b5938acca40a4ade88
+  variables:
+    BUCKET_NAME: data-melhamamsy
+    STATE_FILE: s3_state.json
