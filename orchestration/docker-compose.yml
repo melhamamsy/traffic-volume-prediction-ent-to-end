@@ -4,6 +4,11 @@ services:
       - .env.dev
     build:
       context: .
+
+    environment:
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+
     command: /app/run_app.sh mage start $PROJECT_NAME
     ports:
       - 6789:6789
