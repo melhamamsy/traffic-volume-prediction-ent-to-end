@@ -14,12 +14,12 @@ blocks:
   language: python
   name: ingest
   retry_config: null
-  status: executed
+  status: updated
   timeout: null
   type: data_loader
   upstream_blocks: []
   uuid: ingest
-- all_upstream_blocks_executed: true
+- all_upstream_blocks_executed: false
   color: null
   configuration:
     file_source:
@@ -32,13 +32,13 @@ blocks:
   language: python
   name: transform
   retry_config: null
-  status: executed
+  status: updated
   timeout: null
   type: transformer
   upstream_blocks:
   - ingest
   uuid: transform
-- all_upstream_blocks_executed: true
+- all_upstream_blocks_executed: false
   color: null
   configuration:
     file_source:
@@ -87,7 +87,7 @@ variables:
   TARGET: traffic_volume
 variables_dir: /home/src/mage_data/orchestration
 widgets:
-- all_upstream_blocks_executed: true
+- all_upstream_blocks_executed: false
   color: null
   configuration:
     buckets: 10
@@ -102,13 +102,13 @@ widgets:
   language: python
   name: ingest_histogram_m3
   retry_config: null
-  status: executed
+  status: failed
   timeout: null
   type: chart
   upstream_blocks:
   - ingest
   uuid: ingest_histogram_m3
-- all_upstream_blocks_executed: true
+- all_upstream_blocks_executed: false
   color: null
   configuration:
     chart_type: time series line chart

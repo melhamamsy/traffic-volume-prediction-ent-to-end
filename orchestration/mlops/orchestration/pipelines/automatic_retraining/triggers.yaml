@@ -4,7 +4,7 @@ triggers:
   last_enabled_at: 2024-07-13 13:03:36.304518+00:00
   name: Retrain models daily
   pipeline_uuid: automatic_retraining
-  schedule_interval: '@daily'
+  schedule_interval: '@hourly'
   schedule_type: time
   settings:
     allow_blocks_to_fail: true

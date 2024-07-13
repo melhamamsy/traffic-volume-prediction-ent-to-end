@@ -1,0 +1,5 @@
+blocks:
+  inference:
+  - uuid: no_code_inference.yaml
+layout: []
+permissions: []

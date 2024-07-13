@@ -8,3 +8,13 @@ training_set:
   settings:
     export:
       partitions: 1
+xgboost:
+  object_type: pipeline
+  object_uuid: xgboost_training
+  outdated_after:
+    seconds: 700
+  project: orchestration
+  repo_path: /workspaces/traffic-volume-prediction-ent-to-end/orchestration/mlops/orchestration
+  settings:
+    register_models:
+      partitions: 1

@@ -103,9 +103,9 @@ uuid: xgboost_training
 variables:
   COLUMNS: holiday,temp,rain_1h,snow_1h,clouds_all,weather_main
   DATE_TIME: date_time
-  IS_PLOT_SHAP: Y
-  IS_REGISTER_MODELS: Y
-  IS_RUN_FINE_TUNING: Y
+  IS_PLOT_SHAP: N
+  IS_REGISTER_MODELS: N
+  IS_RUN_FINE_TUNING: N
   MAX_EVALS: 100
   MLFLOW_BUCKET_NAME: mlflow-artifacts-melhamamsy
   MLFLOW_EXPERIMENT_NAME: traffic-volume-prediction-mage-2
