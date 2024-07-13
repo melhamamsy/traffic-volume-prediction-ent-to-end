@@ -3,9 +3,10 @@ fastparquet
 graphviz
 hyperopt
 jupyter
-mlflow==2.12.1
+mlflow
 pandas
 scikit-learn
 seaborn
 shap
 xgboost
+s3fs
