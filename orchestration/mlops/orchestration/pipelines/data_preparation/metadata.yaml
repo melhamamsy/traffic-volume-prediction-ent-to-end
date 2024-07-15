@@ -14,12 +14,12 @@ blocks:
   language: python
   name: ingest
   retry_config: null
-  status: updated
+  status: executed
   timeout: null
   type: data_loader
   upstream_blocks: []
   uuid: ingest
-- all_upstream_blocks_executed: false
+- all_upstream_blocks_executed: true
   color: null
   configuration:
     file_source:
@@ -50,7 +50,7 @@ blocks:
   language: python
   name: export
   retry_config: null
-  status: executed
+  status: updated
   timeout: null
   type: data_exporter
   upstream_blocks:
@@ -80,6 +80,7 @@ tags: []
 type: python
 uuid: data_preparation
 variables:
+  AWS_PROFILE: test-mlops
   BUCKET_NAME: data-melhamamsy
   COLUMNS: holiday,temp,rain_1h,snow_1h,clouds_all,weather_main
   DATE_TIME: date_time
@@ -87,7 +88,7 @@ variables:
   TARGET: traffic_volume
 variables_dir: /home/src/mage_data/orchestration
 widgets:
-- all_upstream_blocks_executed: false
+- all_upstream_blocks_executed: true
   color: null
   configuration:
     buckets: 10
@@ -108,7 +109,7 @@ widgets:
   upstream_blocks:
   - ingest
   uuid: ingest_histogram_m3
-- all_upstream_blocks_executed: false
+- all_upstream_blocks_executed: true
   color: null
   configuration:
     chart_type: time series line chart

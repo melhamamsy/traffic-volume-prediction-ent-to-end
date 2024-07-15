@@ -12,6 +12,81 @@ from mlops.utils.deploy.terraform.constants import (
 from mlops.utils.deploy.terraform.env_vars import update_json_file
 from mlops.utils.deploy.terraform.variables import update_variables
 
+import re
+
+
+def update_ecr_tf(
+    file_path = os.path.join(TERRAFORM_AWS_FULL_PATH, "ecr.tf"),
+    prevent_destroy_ecr = "false"  
+):
+    # Validate the prevent_destroy_ecr
+    if prevent_destroy_ecr not in ['true', 'false']:
+        raise ValueError("prevent_destroy_ecr must be 'true' or 'false'")
+
+    # Read the contents of the file
+    with open(file_path, 'r') as file:
+        content = file.read()
+    
+    # Regular expression to find and replace the prevent_destroy attribute
+    pattern = r'(prevent_destroy\s*=\s*)(true|false)'
+    replacement = r'\1' + prevent_destroy_ecr
+    
+    # Replace the prevent_destroy attribute
+    updated_content = re.sub(pattern, replacement, content)
+    
+    # Write the updated content back to the file
+    with open(file_path, 'w') as file:
+        file.write(updated_content)
+    
+    print(f"Updated {file_path} with prevent_destroy = false")
+
+
+import re
+
+def update_variables_tf(file_path, aws_region_default):
+    # Read the contents of the file
+    with open(file_path, 'r') as file:
+        content = file.read()
+    
+    # Define the new aws_region variable block
+    new_aws_region_block = f'''
+variable "aws_region" {{
+  type        = string
+  description = "AWS Region"
+  default     = "{aws_region_default}"
+}}
+'''
+
+    # Define the new availability_zones variable block
+    new_availability_zones_block = f'''
+variable "availability_zones" {{
+  description = "List of availability zones"
+  default     = ["{aws_region_default}a", "{aws_region_default}b"]
+}}
+'''
+
+    # Define patterns to find or insert the variable blocks
+    aws_region_pattern = r'variable\s+"aws_region"\s*{[^}]*}'
+    availability_zones_pattern = r'variable\s+"availability_zones"\s*{[^}]*}'
+
+    # Update or add the aws_region variable block
+    if re.search(aws_region_pattern, content):
+        content = re.sub(aws_region_pattern, new_aws_region_block, content, flags=re.DOTALL)
+    else:
+        content = content.strip() + '\n\n' + new_aws_region_block
+
+    # Update or add the availability_zones variable block
+    if re.search(availability_zones_pattern, content):
+        content = re.sub(availability_zones_pattern, new_availability_zones_block, content, flags=re.DOTALL)
+    else:
+        content = content.strip() + '\n\n' + new_availability_zones_block
+    
+    # Write the updated content back to the file
+    with open(file_path, 'w') as file:
+        file.write(content)
+    
+    print(f"Updated {file_path} with aws_region = {aws_region_default} and availability_zones")
+
 
 def download_terraform_configurations():
     with TemporaryDirectory() as tmp_dir:
@@ -46,6 +121,7 @@ def setup_configurations(
     )
 
     if prevent_destroy_ecr is not None:
+        print(prevent_destroy_ecr)
         variables['prevent_destroy_ecr'] = prevent_destroy_ecr
         print(f'  "prevent_destroy_ecr" = {"true" if prevent_destroy_ecr else "false"}')
 
@@ -56,4 +132,17 @@ def setup_configurations(
         [
             dict(name='MAGE_PRESENTERS_DIRECTORY', value='mlops/presenters'),
         ],
+    )
+
+    ## update ecr.tf file prevent_destroy
+    update_ecr_tf(
+        file_path = os.path.join(TERRAFORM_AWS_FULL_PATH, "ecr.tf"),
+        prevent_destroy_ecr = prevent_destroy_ecr 
+    )
+
+
+    # update variables.tf aws_region default   
+    update_variables_tf(
+        file_path = os.path.join(TERRAFORM_AWS_FULL_PATH, 'variables.tf'),
+        aws_region_default = os.environ.get("AWS_REGION_NAME", "eu-north-1")
     )

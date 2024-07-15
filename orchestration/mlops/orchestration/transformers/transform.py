@@ -27,7 +27,6 @@ def transform(df, *args, **kwargs):
     Returns:
         Anything (e.g. data frame, dictionary, array, int, str, etc.)
     """
-    # Specify your transformation logic here
 
     columns = kwargs['COLUMNS'].split(",")
     target = kwargs['TARGET']

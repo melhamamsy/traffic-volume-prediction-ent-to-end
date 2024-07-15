@@ -3,6 +3,7 @@ if 'data_exporter' not in globals():
 if 'test' not in globals():
     from mage_ai.data_preparation.decorators import test
 
+
 from pandas import DataFrame
 from typing import List, Tuple
 from sklearn.pipeline import Pipeline

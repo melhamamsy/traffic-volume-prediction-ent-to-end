@@ -6,8 +6,7 @@ services:
       context: .
 
     environment:
-      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
-      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_PROFILE: "test-mlops"
 
     command: /app/run_app.sh mage start $PROJECT_NAME
     ports:

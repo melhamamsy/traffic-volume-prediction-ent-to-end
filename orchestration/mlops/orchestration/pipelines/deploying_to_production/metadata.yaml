@@ -1,95 +1,90 @@
 blocks:
 - all_upstream_blocks_executed: true
-  color: null
+  color: yellow
   configuration:
     file_source:
-      path: orchestration/global_data_products/training_set.py
-    global_data_product:
-      uuid: training_set
+      path: orchestration/custom/permissions.py
   downstream_blocks:
-  - plot_shap
-  - finetune
+  - infrastructure_setup
   executor_config: null
   executor_type: local_python
   has_callback: false
   language: python
-  name: training_set
+  name: permissions
   retry_config: null
   status: executed
   timeout: null
-  type: global_data_product
+  type: custom
   upstream_blocks: []
-  uuid: training_set
+  uuid: permissions
 - all_upstream_blocks_executed: true
   color: null
   configuration:
     file_source:
-      path: orchestration/custom/finetune.py
+      path: orchestration/custom/infrastructure_setup.py
   downstream_blocks:
-  - register_models
+  - destroy_deployed_resources
   executor_config: null
   executor_type: local_python
   has_callback: false
   language: python
-  name: finetune
+  name: infrastructure_setup
   retry_config: null
-  status: updated
+  status: executed
   timeout: null
   type: custom
   upstream_blocks:
-  - training_set
-  uuid: finetune
-- all_upstream_blocks_executed: false
+  - permissions
+  uuid: infrastructure_setup
+- all_upstream_blocks_executed: true
   color: null
   configuration:
     file_source:
-      path: orchestration/custom/register_models.py
+      path: orchestration/custom/destroy_deployed_resources.py
   downstream_blocks:
-  - plot_shap
+  - deploy
   executor_config: null
   executor_type: local_python
   has_callback: false
   language: python
-  name: register_models
+  name: destroy_deployed_resources
   retry_config: null
-  status: updated
+  status: executed
   timeout: null
   type: custom
   upstream_blocks:
-  - finetune
-  uuid: register_models
-- all_upstream_blocks_executed: false
+  - infrastructure_setup
+  uuid: destroy_deployed_resources
+- all_upstream_blocks_executed: true
   color: null
   configuration:
     file_source:
-      path: orchestration/custom/plot_shap.py
+      path: orchestration/custom/deploy.py
   downstream_blocks: []
   executor_config: null
   executor_type: local_python
   has_callback: false
   language: python
-  name: plot_shap
+  name: deploy
   retry_config: null
-  status: executed
+  status: failed
   timeout: null
   type: custom
   upstream_blocks:
-  - training_set
-  - register_models
-  uuid: plot_shap
+  - destroy_deployed_resources
+  uuid: deploy
 cache_block_output_in_memory: false
 callbacks: []
 concurrency_config: {}
 conditionals: []
-created_at: '2024-07-13 11:40:32.627028+00:00'
+created_at: '2024-07-14 10:35:13.746984+00:00'
 data_integration: null
-description: finetune xgboost model using mlflow (EC2-postgres) -> create full sklearn
-  pipelines -> register pipelines to mlflow model registry
+description: null
 executor_config: {}
 executor_count: 1
 executor_type: null
 extensions: {}
-name: xgboost_training
+name: deploying_to_production
 notification_config: {}
 remote_variables_dir: null
 retry_config: {}
@@ -99,20 +94,13 @@ settings:
 spark_config: {}
 tags: []
 type: python
-uuid: xgboost_training
+uuid: deploying_to_production
 variables:
   AWS_PROFILE: test-mlops
-  COLUMNS: holiday,temp,rain_1h,snow_1h,clouds_all,weather_main
-  DATE_TIME: date_time
-  IS_PLOT_SHAP: N
-  IS_REGISTER_MODELS: N
-  IS_RUN_FINE_TUNING: N
-  MAX_EVALS: 100
-  MLFLOW_BUCKET_NAME: mlflow-artifacts-melhamamsy
-  MLFLOW_EXPERIMENT_NAME: traffic-volume-prediction-mage-2
-  N_BEST_MODELS: 2
-  TARGET: traffic_volume
-  TRACKING_SERVER_HOST: ec2-16-171-8-177.eu-north-1.compute.amazonaws.com
-  name_to_register_with: traffic-volume-predictor-2
+  AWS_REGION_NAME: eu-north-1
+  DESTROY: Y
+  password: gq58U9Cnke9VVVyh1MNS
+  prevent_destroy_ecr: false
+  username: mlflow
 variables_dir: /home/src/mage_data/orchestration
 widgets: []

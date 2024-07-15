@@ -4,6 +4,8 @@ from mlops.utils.deploy.terraform.constants import (
     TERRAFORM_AWS_FULL_PATH,
 )
 
+import os
+
 
 def run_terraform_commands(subfolder: str) -> None:
     try:

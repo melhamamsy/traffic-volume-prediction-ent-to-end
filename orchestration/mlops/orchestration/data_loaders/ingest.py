@@ -19,6 +19,9 @@ def load_data(*args, **kwargs) -> DataFrame:
     Returns:
         Anything (e.g. data frame, dictionary, array, int, str, etc.)
     """
+    aws_profile = kwargs['AWS_PROFILE']
+    os.environ['AWS_PROFILE'] = kwargs['AWS_PROFILE']
+    
     bucket_name = kwargs["BUCKET_NAME"]
     file_path = kwargs["FILE_PATH"]
     
@@ -26,14 +29,15 @@ def load_data(*args, **kwargs) -> DataFrame:
 
     # Read the CSV file directly into a pandas DataFrame
     df = read_csv(
-        s3_file_url, storage_options=get_aws_credentials()
+        s3_file_url
+        , storage_options={'profile': aws_profile}
     )
     
     # For plotting only, will be dropped in transformation step
     date_time_column = kwargs["DATE_TIME"]
     df[f'{date_time_column}_float'] = to_datetime(df[f'{date_time_column}']).astype(int64) // 10**9
 
-    
+
     return df
 
 

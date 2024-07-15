@@ -3,6 +3,7 @@ if 'custom' not in globals():
 if 'test' not in globals():
     from mage_ai.data_preparation.decorators import test
 
+import os
 from sklearn.pipeline import Pipeline
 from typing import Dict
 from utils.models.model_registry import (
@@ -19,6 +20,8 @@ def transform_custom(*args, **kwargs) -> Dict[str, Pipeline]:
     Returns:
         Anything (e.g. data frame, dictionary, array, int, str, etc.)
     """
+    os.environ['AWS_PROFILE'] = kwargs['AWS_PROFILE']
+
     n_best_models = kwargs['N_BEST_MODELS']
     model_version_ids = [str(i+1) for i in range(n_best_models)]
 

@@ -3,6 +3,7 @@ if 'custom' not in globals():
 if 'test' not in globals():
     from mage_ai.data_preparation.decorators import test
 
+import os
 from pandas import DataFrame
 from typing import List, Tuple
 from sklearn.pipeline import Pipeline
@@ -26,6 +27,7 @@ def transform(
     Returns:
         Anything (e.g. data frame, dictionary, array, int, str, etc.)
     """
+    os.environ['AWS_PROFILE'] = kwargs['AWS_PROFILE']
     
     tracking_server_host = kwargs["TRACKING_SERVER_HOST"]
     mlflow_experiment_name = kwargs["MLFLOW_EXPERIMENT_NAME"]

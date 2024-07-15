@@ -16,10 +16,12 @@ POLICY_NAME_TERRAFORM_APPLY_DEPLOY_MAGE = 'TerraformApplyDeployMage'
 POLICY_NAME_TERRAFORM_DESTROY_DELETE_RESOURCES = 'TerraformDestroyDeleteResources'
 POLICY_NAME_GITHUB_ACTIONS_DEPLOY_MAGE = 'ContinuousIntegrationContinuousDeployment'
 
+MAIN_PROFILE_NAME = "test-mlops"
+
 
 def update_boto3_client(profile_name: Optional[str] = None) -> None:
     boto3.setup_default_session(profile_name=profile_name or IAM_USER_NAME)
-    print(f'Updated boto3 client to use profile: {profile_name}')
+    print(f'Updated boto3 client to use profile: {profile_name or IAM_USER_NAME}')
 
 
 def load_credentials_and_initialize_client(service_name, profile_name='default'):
@@ -33,6 +35,7 @@ def load_credentials_and_initialize_client(service_name, profile_name='default')
     # Load the AWS credentials file
     config = configparser.ConfigParser()
     config.read(AWS_CREDENTIALS_FILE_PATH)
+
 
     if profile_name in config:
         aws_access_key_id = config[profile_name]['aws_access_key_id']
@@ -55,7 +58,7 @@ def load_credentials_and_initialize_client(service_name, profile_name='default')
         return None
 
 
-IAM_CLIENT = load_credentials_and_initialize_client('iam')
+IAM_CLIENT = load_credentials_and_initialize_client('iam', profile_name=MAIN_PROFILE_NAME)
 
 
 def search_policy_by_name(policy_name):

@@ -18,10 +18,13 @@ ENV PYTHONPATH="${PYTHONPATH}:${MAGE_CODE_PATH}/${PROJECT_NAME}"
 
 # Installing necessary utilities and Terraform.
 # Uncomment the following lines if you want to use Terraform in Docker.
-# RUN apt-get update && \
-#   apt-get install -y wget unzip && \
-#   wget https://releases.hashicorp.com/terraform/1.8.3/terraform_1.8.3_linux_amd64.zip && \
-#   unzip terraform_1.8.3_linux_amd64.zip -d /usr/local/bin/ && \
-#   rm terraform_1.8.3_linux_amd64.zip
+RUN apt-get update && \
+  apt-get install -y wget unzip && \
+  wget https://releases.hashicorp.com/terraform/1.9.2/terraform_1.9.2_linux_amd64.zip && \
+  unzip terraform_1.9.2_linux_amd64.zip -d /usr/local/bin/ && \
+  rm terraform_1.9.2_linux_amd64.zip && \
+  echo terraform -version
 
 CMD ["/bin/sh", "-c", "/app/run_app.sh"]
+
+

@@ -12,12 +12,12 @@ blocks:
   language: python
   name: detect_new_data
   retry_config: null
-  status: executed
+  status: updated
   timeout: null
   type: sensor
   upstream_blocks: []
   uuid: detect_new_data
-- all_upstream_blocks_executed: true
+- all_upstream_blocks_executed: false
   color: null
   configuration:
     file_source:
@@ -59,6 +59,7 @@ tags: []
 type: python
 uuid: automatic_retraining
 variables:
+  AWS_PROFILE: test-mlops
   BUCKET_NAME: data-melhamamsy
   STATE_FILE: s3_state.json
 variables_dir: /home/src/mage_data/orchestration
