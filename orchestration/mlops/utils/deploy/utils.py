@@ -4,6 +4,33 @@ import boto3
 import json
 
 
+
+def list_policy_versions(policy_arn):
+    try:
+        response = iam_client.list_policy_versions(PolicyArn=policy_arn)
+        return response['Versions']
+    except ClientError as e:
+        print(f"Error listing policy versions: {e}")
+        return []
+
+# Function to delete the oldest version of a managed policy
+def delete_oldest_policy_version(policy_arn):
+    versions = list_policy_versions(policy_arn)
+    if len(versions) >= 5:
+        # Find the oldest non-default version
+        non_default_versions = [v for v in versions if not v['IsDefaultVersion']]
+        oldest_version = sorted(non_default_versions, key=lambda v: v['CreateDate'])[0]
+        try:
+            iam_client.delete_policy_version(
+                PolicyArn=policy_arn,
+                VersionId=oldest_version['VersionId']
+            )
+            print(f"Deleted oldest version: {oldest_version['VersionId']}")
+        except ClientError as e:
+            print(f"Error deleting policy version: {e}")
+
+
+
 def check_policy_action(profile_name, policy_arn, action_to_check):
     # Create a boto3 session using the specified profile
     session = boto3.Session(profile_name=profile_name)
@@ -79,6 +106,9 @@ def update_policy(profile_name, policy_arn, new_action):
     # Convert the policy document to JSON
     updated_policy_document = json.dumps(policy_document)
 
+
+    # Delete oldest version if versions go over 5
+    delete_oldest_policy_version(policy_arn)
     # Create a new policy version with the updated document
     iam_client.create_policy_version(
         PolicyArn=policy_arn,

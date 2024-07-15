@@ -60,7 +60,8 @@ blocks:
   configuration:
     file_source:
       path: orchestration/custom/deploy.py
-  downstream_blocks: []
+  downstream_blocks:
+  - ci_and_cd
   executor_config: null
   executor_type: local_python
   has_callback: false
@@ -73,6 +74,24 @@ blocks:
   upstream_blocks:
   - destroy_deployed_resources
   uuid: deploy
+- all_upstream_blocks_executed: false
+  color: null
+  configuration:
+    file_source:
+      path: orchestration/custom/ci_and_cd.py
+  downstream_blocks: []
+  executor_config: null
+  executor_type: local_python
+  has_callback: false
+  language: python
+  name: ci_and_cd
+  retry_config: null
+  status: updated
+  timeout: null
+  type: custom
+  upstream_blocks:
+  - deploy
+  uuid: ci_and_cd
 cache_block_output_in_memory: false
 callbacks: []
 concurrency_config: {}
