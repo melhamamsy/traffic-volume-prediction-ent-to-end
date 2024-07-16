@@ -38,7 +38,9 @@
                             "iam:ListAttachedUserPolicies",
                             "iam:GetPolicy",
                             "iam:GetPolicyVersion",
-                            "iam:CreatePolicyVersion"
+                            "iam:CreatePolicyVersion",
+                            "elasticbeanstalk:CreateApplication",
+                            "elasticbeanstalk:ListPlatformBranches"
                         ],
                         "Resource": "*"
                     }
@@ -53,6 +55,7 @@
 - Choose Attach policies directly.
 - Search for your custom policy (e.g., AllowCreatePolicy), select it, and click Next: Review.
 - Click Add permissions to attach the policy.
+- Attach AdministratorAccess-AWSElasticBeanstalk policy as well for deployment
 - Add Access Key:
 
     - On the user details page, select the "Security credentials" tab.
@@ -92,7 +95,7 @@
             sudo pip install awscli --force-reinstall --upgrade
     - Cloned mage.ai.url into orchestration directory.
 
-            cd orchestration && rm -rf .git
+            <!-- cd orchestration && rm -rf .git -->
             ./scripts/start.sh
 
             
@@ -145,6 +148,34 @@
             export AWS_PROFILE="MageDeployer"
 
         Or could be done in python using `deploying_to_production` pipeline, block: `permissions`.
+    
+    ## 5.4 Deployment
+    Online deployment using AWS Elastic Beanstalk
+
+    - explain directory structure
+    -
+
+        eb init -p docker -r eu-north-1 --profile test-mlops traffic-volume-prediction
+        
+        ## make sure it works locally
+        eb local run --port 9696 --profile test-mlops
+        ## In another terminal
+        pipenv shell
+        python test.py
+        ^C
+
+        ## create an environment (no need to --profile, in config.yml)
+        eb create traffic-volume-prediction-env
+        ## In another terminal
+        pipenv shell
+        python test.py
+        ^C
+
+        ## Do not forget to terminate everything and remove application:
+        eb terminate --all --force
+
+
+
 
 
 

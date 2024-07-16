@@ -13,9 +13,9 @@ def correct_dtypes(
     df[data_time_column] = to_datetime(df[data_time_column])
 
     df["temp"] = df["temp"].astype(float)
-    df["rain_1h"] = df["temp"].astype(float)
-    df["snow_1h"] = df["temp"].astype(float)
-    df["clouds_all"] = df["temp"].astype(float)
+    df["rain_1h"] = df["rain_1h"].astype(float)
+    df["snow_1h"] = df["snow_1h"].astype(float)
+    df["clouds_all"] = df["clouds_all"].astype(float)
 
     return df
 
