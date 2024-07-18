@@ -4,9 +4,6 @@ import mlflow # type: ignore
 from pandas import DataFrame, to_datetime
 import os
 
-# mlflow.set_tracking_uri("http://localhost:5000")
-# mlflow.set_experiment("green-taxi-duration")
-
 
 RUN_ID = "c6343316f0c64d0ea822e39d8820e3db"
 MLFLOW_BUCKET_NAME = "mlflow-artifacts-melhamamsy"
