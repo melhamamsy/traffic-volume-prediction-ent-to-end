@@ -4,6 +4,14 @@ if 'test' not in globals():
     from mage_ai.data_preparation.decorators import test
 
 import os
+import sys
+
+# Determine the root directory of your project
+project_root = os.path.join(os.getcwd(), "mlops")
+# Check if the project root is already in sys.path, and add it if not
+if project_root not in sys.path:
+    sys.path.append(project_root)
+    
 from pandas import DataFrame
 from typing import List, Tuple
 from sklearn.pipeline import Pipeline
@@ -51,7 +59,7 @@ def transform(
     max_evals = kwargs["MAX_EVALS"]
     n_best_models = kwargs["N_BEST_MODELS"]
 
-    
+      
     if kwargs["IS_RUN_FINE_TUNING"].upper() in {"Y", "YES"}:
         xgboost_finetuner = XGBoostFinetuner(
             X_train, 

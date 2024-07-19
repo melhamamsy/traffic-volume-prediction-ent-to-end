@@ -3,6 +3,16 @@ if 'custom' not in globals():
 if 'test' not in globals():
     from mage_ai.data_preparation.decorators import test
 
+
+import os
+import sys
+
+# Determine the root directory of your project
+project_root = os.path.join(os.getcwd(), "mlops")
+# Check if the project root is already in sys.path, and add it if not
+if project_root not in sys.path:
+    sys.path.append(project_root)
+
 from utils.utils.plotting import plot_shap_summary_plot
 
 
@@ -18,9 +28,7 @@ def transform_custom(
 
     Returns:
         Anything (e.g. data frame, dictionary, array, int, str, etc.)
-    """
-    # Specify your custom logic here
-    
+    """    
     df_train = data["export"][0]
 
     if kwargs['IS_PLOT_SHAP'].upper() in {"Y", "YES"}:

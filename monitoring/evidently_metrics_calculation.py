@@ -11,6 +11,7 @@ from mlflow.sklearn import load_model
 from utils.data_preparation.cleaning import correct_dtypes, remove_duplicates
 from utils.data_preparation.feature_selector import select_features
 
+import os
 
 from evidently.report import Report
 from evidently import ColumnMapping
@@ -67,10 +68,11 @@ values (
 
 ########################################### Reference Data ############################################
 dataframes = []
+data_dir_path = os.path.join(os.getcwd(),"data/raw/")
 for year in [2012, 2013, 2016]:
     file_path =\
-		f"/media/mohammed/workspace4/__ing/mlopsing/traffic-volume-prediction-ent-to-end/"+\
-			f"monitoring/data/raw/Metro_Interstate_Traffic_Volume_{year}.csv"
+		data_dir_path+\
+			f"Metro_Interstate_Traffic_Volume_{year}.csv"
     dataframes.append(
 		pd.read_csv(file_path)
 	)
@@ -81,10 +83,11 @@ del dataframes
 
 ########################################### Current Data ############################################
 dataframes = []
+data_dir_path = os.path.join(os.getcwd(),"data/raw/")
 for year in [2017, 2018]:
     file_path =\
-		f"/media/mohammed/workspace4/__ing/mlopsing/traffic-volume-prediction-ent-to-end/"+\
-			f"monitoring/data/raw/Metro_Interstate_Traffic_Volume_{year}.csv"
+		data_dir_path+\
+			f"Metro_Interstate_Traffic_Volume_{year}.csv"
     dataframes.append(
 		pd.read_csv(file_path)
 	)

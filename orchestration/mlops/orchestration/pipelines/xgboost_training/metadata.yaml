@@ -33,13 +33,13 @@ blocks:
   language: python
   name: finetune
   retry_config: null
-  status: updated
+  status: executed
   timeout: null
   type: custom
   upstream_blocks:
   - training_set
   uuid: finetune
-- all_upstream_blocks_executed: false
+- all_upstream_blocks_executed: true
   color: null
   configuration:
     file_source:
@@ -52,7 +52,7 @@ blocks:
   language: python
   name: register_models
   retry_config: null
-  status: updated
+  status: failed
   timeout: null
   type: custom
   upstream_blocks:
@@ -70,7 +70,7 @@ blocks:
   language: python
   name: plot_shap
   retry_config: null
-  status: executed
+  status: failed
   timeout: null
   type: custom
   upstream_blocks:
@@ -104,7 +104,7 @@ variables:
   AWS_PROFILE: test-mlops
   COLUMNS: holiday,temp,rain_1h,snow_1h,clouds_all,weather_main
   DATE_TIME: date_time
-  IS_PLOT_SHAP: N
+  IS_PLOT_SHAP: Y
   IS_REGISTER_MODELS: N
   IS_RUN_FINE_TUNING: N
   MAX_EVALS: 100

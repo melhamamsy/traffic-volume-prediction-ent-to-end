@@ -14,7 +14,7 @@ blocks:
   language: python
   name: ingest
   retry_config: null
-  status: executed
+  status: updated
   timeout: null
   type: data_loader
   upstream_blocks: []
@@ -84,7 +84,7 @@ variables:
   BUCKET_NAME: data-melhamamsy
   COLUMNS: holiday,temp,rain_1h,snow_1h,clouds_all,weather_main
   DATE_TIME: date_time
-  FILE_PATH: traffic-volume/Metro_Interstate_Traffic_Volume_2012_2016.csv
+  FILE_PATH_PREFIX: traffic-volume/Metro_Interstate_Traffic_Volume
   TARGET: traffic_volume
 variables_dir: /home/src/mage_data/orchestration
 widgets:
@@ -106,8 +106,7 @@ widgets:
   status: failed
   timeout: null
   type: chart
-  upstream_blocks:
-  - ingest
+  upstream_blocks: []
   uuid: ingest_histogram_m3
 - all_upstream_blocks_executed: true
   color: null
