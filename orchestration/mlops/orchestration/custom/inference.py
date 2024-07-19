@@ -5,7 +5,7 @@ if 'test' not in globals():
 
 from typing import Dict, List
 from pandas import DataFrame
-from utils.data_preparation.cleaning import correct_dtypes
+from mlops.utils.data_preparation.cleaning import correct_dtypes
 
 
 # 5545, 929

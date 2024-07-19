@@ -52,7 +52,7 @@ def register_model_mlflow(
 ## return all models
 def load_registered_model_mlflow(
     model_name: str,
-    model_version_ids: List[str],
+    n_latest_models: int,
     mlflow_experiment_name: str,
     tracking_server_host: str,
     mlflow_bucket_name: str
@@ -67,7 +67,7 @@ def load_registered_model_mlflow(
     models = {}
 
 
-    for version in versions[::-1]:
+    for version in versions:
         model_version = {
             "version": version.version,
             "run_id": version.run_id,
@@ -76,9 +76,9 @@ def load_registered_model_mlflow(
             "created_time": version.creation_timestamp,
             "last_updated_time": version.last_updated_timestamp
         }
-        if str(model_version["version"]) in model_version_ids:
-            model_versions.append(model_version)
+        model_versions.append(model_version)
 
+    model_versions = sorted(model_versions, key=lambda x: int(x['version']))[-n_latest_models:]
 
     for model_version in model_versions:
         model_uri = f"s3://{mlflow_bucket_name}/{experiment_id}/{model_version['run_id']}/artifacts/models"

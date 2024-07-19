@@ -1,6 +1,6 @@
 from typing import Dict
-from flask import Flask, request, jsonify # type: ignore
-import mlflow # type: ignore
+from flask import Flask, request, jsonify
+import mlflow
 from pandas import DataFrame, to_datetime
 import os
 

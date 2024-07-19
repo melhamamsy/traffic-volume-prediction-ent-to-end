@@ -15,7 +15,7 @@ from mlops.utils.deploy.aws import (
 if 'custom' not in globals():
     from mage_ai.data_preparation.decorators import custom
 
-from utils.deploy.utils import (
+from mlops.utils.deploy.utils import (
     user_exists,
     policy_exists_by_name,
     get_policy_arn,

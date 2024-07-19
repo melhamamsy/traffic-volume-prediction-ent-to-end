@@ -41,8 +41,6 @@ def update_ecr_tf(
     print(f"Updated {file_path} with prevent_destroy = false")
 
 
-import re
-
 def update_variables_tf(file_path, aws_region_default):
     # Read the contents of the file
     with open(file_path, 'r') as file:

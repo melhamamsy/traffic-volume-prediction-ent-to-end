@@ -25,8 +25,11 @@ def terraform_apply() -> None:
     run_terraform_commands(TERRAFORM_AWS_FULL_PATH)
 
 
-def terraform_destroy() -> None:
+def terraform_destroy() -> None:       
     try:
+        if not is_terraform_initialized():
+            subprocess.run(['terraform', '-chdir=' + TERRAFORM_AWS_FULL_PATH, 'init'], check=True)
+
         subprocess.run(
             [
                 'terraform',
@@ -40,3 +43,6 @@ def terraform_destroy() -> None:
     except subprocess.CalledProcessError as err:
         print(f'Error: {err}')
         raise err
+
+def is_terraform_initialized():
+    return os.path.isdir('.terraform')

@@ -6,7 +6,7 @@ on:
       - master
 
 env:
-  AWS_REGION: us-west-2
+  AWS_REGION: eu-north-1
   ECR_REPOSITORY: mlops-production-repository
   ECS_CLUSTER: mlops-production-cluster
   ECS_SERVICE: mlops-production-ecs-service

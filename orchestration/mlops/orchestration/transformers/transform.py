@@ -3,18 +3,10 @@ if 'transformer' not in globals():
 if 'test' not in globals():
     from mage_ai.data_preparation.decorators import test
 
-import os
-import sys
 
-# Determine the root directory of your project
-project_root = os.path.join(os.getcwd(), "mlops")
-# Check if the project root is already in sys.path, and add it if not
-if project_root not in sys.path:
-    sys.path.append(project_root)
-
-from utils.utils.uuid import create_uuid_col
-from utils.data_preparation.feature_selector import select_features
-from utils.data_preparation.cleaning import correct_dtypes, remove_duplicates
+from mlops.utils.utils.uuid import create_uuid_col
+from mlops.utils.data_preparation.feature_selector import select_features
+from mlops.utils.data_preparation.cleaning import correct_dtypes, remove_duplicates
 
 
 

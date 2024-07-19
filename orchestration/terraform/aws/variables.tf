@@ -18,13 +18,11 @@ variable "app_count" {
   default     = 1
 }
 
-
 variable "aws_region" {
   type        = string
   description = "AWS Region"
   default     = "eu-north-1"
 }
-
 
 variable "aws_cloudwatch_retention_in_days" {
   type        = number
@@ -87,12 +85,10 @@ variable "private_subnets" {
   default     = ["10.32.0.0/24", "10.32.1.0/24"]
 }
 
-
 variable "availability_zones" {
   description = "List of availability zones"
   default     = ["eu-north-1a", "eu-north-1b"]
 }
-
 
 variable "enable_ci_cd" {
   description = "A flag to enable/disable the CI/CD null resource"
@@ -103,5 +99,17 @@ variable "enable_ci_cd" {
 variable "prevent_destroy_ecr" {
   description = "Dynamically added by the Mage Python script."
   default     = false
+  type        = string
+}
+
+variable "smtp_email" {
+  description = "Dynamically added by the Mage Python script."
+  default     = ""
+  type        = string
+}
+
+variable "smtp_password" {
+  description = "Dynamically added by the Mage Python script."
+  default     = ""
   type        = string
 }

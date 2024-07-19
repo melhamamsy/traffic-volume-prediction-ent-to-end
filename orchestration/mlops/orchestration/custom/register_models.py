@@ -6,7 +6,7 @@ if 'test' not in globals():
 import os
 import sys
 
-# Determine the root directory of your project
+# Weird error without
 project_root = os.path.join(os.getcwd(), "mlops")
 # Check if the project root is already in sys.path, and add it if not
 if project_root not in sys.path:
@@ -14,7 +14,7 @@ if project_root not in sys.path:
     
 from sklearn.pipeline import Pipeline
 from typing import Dict
-from utils.models.model_registry import (
+from mlops.utils.models.model_registry import (
     register_model_mlflow,
     load_registered_model_mlflow
 )
@@ -31,7 +31,6 @@ def transform_custom(*args, **kwargs) -> Dict[str, Pipeline]:
     os.environ['AWS_PROFILE'] = kwargs['AWS_PROFILE']
 
     n_best_models = kwargs['N_BEST_MODELS']
-    model_version_ids = [str(i+1) for i in range(n_best_models)]
 
     tracking_server_host = kwargs['TRACKING_SERVER_HOST']
     mlflow_experiment_name = kwargs['MLFLOW_EXPERIMENT_NAME']
@@ -54,7 +53,7 @@ def transform_custom(*args, **kwargs) -> Dict[str, Pipeline]:
 
     pipelines = load_registered_model_mlflow(
         model_name = name_to_register_with,
-        model_version_ids = model_version_ids,
+        n_latest_models = n_best_models,
         mlflow_experiment_name = mlflow_experiment_name,
         tracking_server_host = tracking_server_host,
         mlflow_bucket_name = mlflow_bucket_name

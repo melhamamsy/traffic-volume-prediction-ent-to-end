@@ -4,17 +4,7 @@ if 'test' not in globals():
     from mage_ai.data_preparation.decorators import test
 
 import os
-import sys
-
-
-# Determine the root directory of your project
-project_root = os.path.join(os.getcwd(), "mlops")
-# Check if the project root is already in sys.path, and add it if not
-if project_root not in sys.path:
-    sys.path.append(project_root)
-
-
-from utils.utils.credentials import get_aws_credentials
+from mlops.utils.utils.credentials import get_aws_credentials
 import boto3
 from pandas import DataFrame, read_csv, to_datetime, concat
 from numpy import int64
@@ -29,7 +19,6 @@ def load_data(*args, **kwargs) -> DataFrame:
     Returns:
         Anything (e.g. data frame, dictionary, array, int, str, etc.)
     """
-
     aws_profile = kwargs['AWS_PROFILE']
     os.environ['AWS_PROFILE'] = kwargs['AWS_PROFILE']
     
@@ -37,7 +26,7 @@ def load_data(*args, **kwargs) -> DataFrame:
     file_path_prefix = kwargs["FILE_PATH_PREFIX"]
     
     dfs = []
-    for year in [2012, 2013, 2016]:
+    for year in [2012, 2013, 2014, 2015, 2016]:
         s3_file_url = f's3://{bucket_name}/{file_path_prefix}_{year}.csv'
 
         # Read the CSV file directly into a pandas DataFrame

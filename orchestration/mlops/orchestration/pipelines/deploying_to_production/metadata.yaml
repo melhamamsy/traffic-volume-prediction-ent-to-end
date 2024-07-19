@@ -68,7 +68,7 @@ blocks:
   language: python
   name: deploy
   retry_config: null
-  status: failed
+  status: executed
   timeout: null
   type: custom
   upstream_blocks:

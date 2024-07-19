@@ -11,9 +11,16 @@ def retrain(*args, **kwargs) -> None:
     """
     Retrain xgboost pipeline if sensor output is true
     """
-    
+
+    variables = {
+        "IS_RUN_FINE_TUNING": "Y",
+        "IS_REGISTER_MODELS": "Y",
+        "IS_PLOT_SHAP": "Y",
+    }
+
     trigger_pipeline(
         'xgboost_training',
+        variables=variables,
         check_status=True,
         error_on_failure=True,
         schedule_name='Automatic retraining for xgboost models',

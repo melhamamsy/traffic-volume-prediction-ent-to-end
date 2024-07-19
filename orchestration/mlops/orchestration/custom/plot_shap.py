@@ -4,16 +4,7 @@ if 'test' not in globals():
     from mage_ai.data_preparation.decorators import test
 
 
-import os
-import sys
-
-# Determine the root directory of your project
-project_root = os.path.join(os.getcwd(), "mlops")
-# Check if the project root is already in sys.path, and add it if not
-if project_root not in sys.path:
-    sys.path.append(project_root)
-
-from utils.utils.plotting import plot_shap_summary_plot
+from mlops.utils.utils.plotting import plot_shap_summary_plot
 
 
 

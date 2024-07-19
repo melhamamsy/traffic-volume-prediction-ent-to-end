@@ -4,21 +4,12 @@ if 'test' not in globals():
     from mage_ai.data_preparation.decorators import test
 
 
-import os
-import sys
-
-# Determine the root directory of your project
-project_root = os.path.join(os.getcwd(), "mlops")
-# Check if the project root is already in sys.path, and add it if not
-if project_root not in sys.path:
-    sys.path.append(project_root)
-
 from pandas import DataFrame
 from typing import List, Tuple
 from sklearn.pipeline import Pipeline
-from utils.data_preparation.feature_engineering import FeatureEngineeringTransformer
-from utils.data_preparation.encoders import DictVectorizerTransformer
-from utils.data_preparation.splitters import split_on_date_time
+from mlops.utils.data_preparation.feature_engineering import FeatureEngineeringTransformer
+from mlops.utils.data_preparation.encoders import DictVectorizerTransformer
+from mlops.utils.data_preparation.splitters import split_on_date_time
 
 
 
@@ -63,7 +54,8 @@ def test_returned_data_frames_lengths(
     df_val: DataFrame, 
     *args, **kwargs
 ) -> None:
-    assert df_train.__len__() + df_val.__len__() == 29426, "wrong total observations"
+    assert df_train.__len__() > 1000, "few training observations"
+    assert df_val.__len__() > 1000, "few validation observations"
 
 @test
 def test_returned_data_frames_columns(

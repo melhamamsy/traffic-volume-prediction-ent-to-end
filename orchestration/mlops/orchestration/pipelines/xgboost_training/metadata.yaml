@@ -15,12 +15,12 @@ blocks:
   language: python
   name: training_set
   retry_config: null
-  status: executed
+  status: failed
   timeout: null
   type: global_data_product
   upstream_blocks: []
   uuid: training_set
-- all_upstream_blocks_executed: true
+- all_upstream_blocks_executed: false
   color: null
   configuration:
     file_source:
@@ -39,7 +39,7 @@ blocks:
   upstream_blocks:
   - training_set
   uuid: finetune
-- all_upstream_blocks_executed: true
+- all_upstream_blocks_executed: false
   color: null
   configuration:
     file_source:
@@ -52,7 +52,7 @@ blocks:
   language: python
   name: register_models
   retry_config: null
-  status: failed
+  status: executed
   timeout: null
   type: custom
   upstream_blocks:
@@ -70,7 +70,7 @@ blocks:
   language: python
   name: plot_shap
   retry_config: null
-  status: failed
+  status: executed
   timeout: null
   type: custom
   upstream_blocks:
@@ -104,15 +104,15 @@ variables:
   AWS_PROFILE: test-mlops
   COLUMNS: holiday,temp,rain_1h,snow_1h,clouds_all,weather_main
   DATE_TIME: date_time
-  IS_PLOT_SHAP: Y
+  IS_PLOT_SHAP: N
   IS_REGISTER_MODELS: N
   IS_RUN_FINE_TUNING: N
   MAX_EVALS: 100
   MLFLOW_BUCKET_NAME: mlflow-artifacts-melhamamsy
-  MLFLOW_EXPERIMENT_NAME: traffic-volume-prediction-mage-2
+  MLFLOW_EXPERIMENT_NAME: traffic-volume-prediction-mage
   N_BEST_MODELS: 2
   TARGET: traffic_volume
-  TRACKING_SERVER_HOST: ec2-16-171-8-177.eu-north-1.compute.amazonaws.com
-  name_to_register_with: traffic-volume-predictor-2
+  TRACKING_SERVER_HOST: ec2-13-53-200-152.eu-north-1.compute.amazonaws.com
+  name_to_register_with: traffic-volume-predictor
 variables_dir: /home/src/mage_data/orchestration
 widgets: []

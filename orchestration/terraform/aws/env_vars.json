@@ -26,5 +26,13 @@
   {
     "name": "MAGE_PRESENTERS_DIRECTORY",
     "value": "mlops/presenters"
+  },
+  {
+    "name": "SMTP_EMAIL",
+    "value": "${smtp_email}"
+  },
+  {
+    "name": "SMTP_PASSWORD",
+    "value": "${smtp_password}"
   }
 ]

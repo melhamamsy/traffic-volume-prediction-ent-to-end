@@ -130,7 +130,7 @@
                 --policy-arn $(aws iam list-policies \
                 --query "Policies[?PolicyName==\`TerraformApplyDeployMage\`].Arn" \
                 --output text) \
-                --user-name MageDeployer
+                --user-name MageDeployer    
 
 
             aws iam attach-user-policy \
