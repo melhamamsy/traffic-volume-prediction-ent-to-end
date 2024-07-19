@@ -74,7 +74,7 @@ blocks:
   upstream_blocks:
   - destroy_deployed_resources
   uuid: deploy
-- all_upstream_blocks_executed: false
+- all_upstream_blocks_executed: true
   color: null
   configuration:
     file_source:
@@ -86,7 +86,7 @@ blocks:
   language: python
   name: ci_and_cd
   retry_config: null
-  status: updated
+  status: executed
   timeout: null
   type: custom
   upstream_blocks:

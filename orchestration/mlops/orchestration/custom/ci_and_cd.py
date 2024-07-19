@@ -12,9 +12,12 @@ from mlops.utils.deploy.aws import (
 if 'custom' not in globals():
     from mage_ai.data_preparation.decorators import custom
 
+import os
 
 @custom
 def setup(*args, **kwargs):
+    os.environ['AWS_PROFILE'] = kwargs['AWS_PROFILE']
+
     # Create IAM policy ContinuousIntegrationContinuousDeployment
     policy_arn = create_policy(
         POLICY_NAME_GITHUB_ACTIONS_DEPLOY_MAGE, GITHUB_ACTIONS_DEPLOY_URL
