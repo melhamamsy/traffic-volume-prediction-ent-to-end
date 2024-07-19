@@ -20,3 +20,4 @@ secrets/
 terraform.tfstate
 terraform.tfstate.backup
 titanic_clean.csv
+populate_aws_cred.sh

@@ -55,7 +55,7 @@ blocks:
   upstream_blocks:
   - infrastructure_setup
   uuid: destroy_deployed_resources
-- all_upstream_blocks_executed: true
+- all_upstream_blocks_executed: false
   color: null
   configuration:
     file_source:
@@ -74,7 +74,7 @@ blocks:
   upstream_blocks:
   - destroy_deployed_resources
   uuid: deploy
-- all_upstream_blocks_executed: true
+- all_upstream_blocks_executed: false
   color: null
   configuration:
     file_source:

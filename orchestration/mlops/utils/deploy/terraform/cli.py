@@ -25,7 +25,7 @@ def terraform_apply() -> None:
     run_terraform_commands(TERRAFORM_AWS_FULL_PATH)
 
 
-def terraform_destroy() -> None:       
+def terraform_destroy(database_password = None) -> None:       
     try:
         if not is_terraform_initialized():
             subprocess.run(['terraform', '-chdir=' + TERRAFORM_AWS_FULL_PATH, 'init'], check=True)
@@ -36,6 +36,7 @@ def terraform_destroy() -> None:
                 '-chdir=' + TERRAFORM_AWS_FULL_PATH,
                 'destroy',
                 '-auto-approve',
+                f'-var=database_password={database_password}'
             ],
             check=True,
         )

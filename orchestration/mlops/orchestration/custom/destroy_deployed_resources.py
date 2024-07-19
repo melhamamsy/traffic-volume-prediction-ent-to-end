@@ -5,10 +5,13 @@ if 'custom' not in globals():
 
 import os
 
+from mlops.utils.deploy.aws import IAM_USER_NAME
+
 @custom
 def transform_custom(*args, **kwargs):
+    os.environ['AWS_PROFILE'] = IAM_USER_NAME
     if kwargs.get('DESTROY').upper() in ["Y", "YES"] :
-        terraform_destroy()
+        terraform_destroy(kwargs['password'])
     else:
         print('Skipping Terraform destroy...')
 
