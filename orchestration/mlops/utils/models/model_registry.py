@@ -1,6 +1,5 @@
 from typing import List
 
-import mlflow
 from mlflow import register_model
 from mlflow.sklearn import load_model
 from mlflow.tracking import MlflowClient
@@ -90,7 +89,3 @@ def load_registered_model_mlflow(
         models[model_version["version"]] = model
 
     return models
-
-
-    
-### implement remove_registered_model_mlflow

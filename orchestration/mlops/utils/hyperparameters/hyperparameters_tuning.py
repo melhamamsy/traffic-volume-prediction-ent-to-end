@@ -22,7 +22,7 @@ class XGBoostFinetuner:
         feature_engineering_pipeline: Pipeline,
         max_evals: int,
         n_best_models: int,
-
+        run_name: str = 'hyperopt_xgb'
     ):
     
         self.X_train = X_train
@@ -45,6 +45,7 @@ class XGBoostFinetuner:
         self.n_best_models = n_best_models
         self.max_evals = max_evals
         self.best_models = []
+        self.run_name = run_name
 
 
     # Define the objective function
@@ -99,7 +100,7 @@ class XGBoostFinetuner:
 
         # Run the optimization
         trials = Trials()
-        with mlflow.start_run(run_name='hyperopt_xgb') as run:
+        with mlflow.start_run(run_name=self.run_name) as run:
             best = fmin(fn=lambda space: self.objective(space),
                         space=self.space,
                         algo=tpe.suggest,
