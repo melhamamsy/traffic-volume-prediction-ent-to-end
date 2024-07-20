@@ -89,3 +89,32 @@ def load_registered_model_mlflow(
         models[model_version["version"]] = model
 
     return models
+
+
+def delete_registered_model(tracking_server_host: str, model_name: str):
+    client = MlflowClient(f"http://{tracking_server_host}:5000")
+    
+    # List all versions of the model
+    versions = client.search_model_versions(f"name='{model_name}'")
+    
+    # Delete each version of the model
+    for version in versions:
+        client.delete_model_version(name=model_name, version=version.version)
+        print(f"Deleted version {version.version} of model {model_name}")
+
+    # Delete the registered model
+    client.delete_registered_model(name=model_name)
+    print(f"Deleted registered model {model_name}")
+
+def list_registered_models(tracking_server_host: str):
+    client = MlflowClient(f"http://{tracking_server_host}:5000")
+
+    # Get all registered models
+    registered_models = client.search_registered_models()
+
+    # Print the names of all registered models
+    model_names = [model.name for model in registered_models]
+    for name in model_names:
+        print(name)
+
+    return model_names

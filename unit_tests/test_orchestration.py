@@ -12,7 +12,10 @@ from orchestration.mlops.utils.data_preparation.splitters import split_on_date_t
 
 from orchestration.mlops.utils.hyperparameters.hyperparameters_tuning import XGBoostFinetuner
 
-from orchestration.mlops.utils.models.model_registry import load_registered_model_mlflow, register_model_mlflow
+from orchestration.mlops.utils.models.model_registry import (
+    load_registered_model_mlflow, register_model_mlflow, 
+    delete_registered_model, list_registered_models
+)
 
 
 
@@ -194,7 +197,7 @@ def test_split_on_date_time():
     assert val_index.equals(expected_val_index)
 
 ### orchestration.mlops.utils.hyperparameters_tuning
-@pytest.mark.usefixtures("reset_tracking_uri")
+@pytest.mark.usefixtures("set_tracking_uri", "cleanup_runs")
 def test_xgboost_finetuner_in_pipeline():
     """
     Test the XGBoostFinetuner class finetuner.
@@ -265,8 +268,8 @@ def test_xgboost_finetuner_in_pipeline():
     assert actual_hyperopt_runs_count == expected_hyperopt_runs_count
 
 ### orchestration.mlops.utils.hyperparameters_tuning
-@pytest.mark.usefixtures("set_tracking_uri")
-def test_register_load_model_mlflow():
+@pytest.mark.usefixtures("set_tracking_uri", "cleanup_registry")
+def test_register_load_delete_model_mlflow():
     n_best_models = 1
 
 
@@ -285,6 +288,8 @@ def test_register_load_model_mlflow():
             name_to_register_with
         )
 
+    assert name_to_register_with in list_registered_models(tracking_server_host), "Model not registered."
+
     pipelines = load_registered_model_mlflow(
         model_name = name_to_register_with,
         n_latest_models = n_best_models,
@@ -294,6 +299,9 @@ def test_register_load_model_mlflow():
     ) 
 
     for i in range(n_best_models):
-        assert isinstance(pipelines["i"], Pipeline)
+        assert isinstance(pipelines[f"{i+1}"], Pipeline), f"Loading registered model with version {i+1} failed"
+
+    delete_registered_model(tracking_server_host, name_to_register_with)
+    assert name_to_register_with not in list_registered_models(tracking_server_host), "Model deletion from registry failed."
 
     
