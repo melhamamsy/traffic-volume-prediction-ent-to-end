@@ -1,0 +1,20 @@
+[tool.pylint.messages_control]
+
+disable = [
+    "missing-function-docstring",
+    "missing-final-newline",
+    "missing-class-docstring",
+    "missing-module-docstring",
+    "invalid-name",
+    "too-few-public-methods",
+    "broad-exception-caught",
+    "too-many-arguments",
+    "not-context-manager",
+    "duplicate-code"
+]
+
+[tool.pylint]
+init-hook = "import sys; sys.path.append('./monitoring'); sys.path.append('./orchestration'); sys.path.append('./orchestration/mlops'); sys.path.append('./deployment')"
+ignore-paths = [
+    "orchestration/.*"
+]
