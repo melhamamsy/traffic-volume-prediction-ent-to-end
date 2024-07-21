@@ -6,11 +6,6 @@ if 'test' not in globals():
 import os
 import sys
 
-# Weird error without
-project_root = os.path.join(os.getcwd(), "mlops")
-# Check if the project root is already in sys.path, and add it if not
-if project_root not in sys.path:
-    sys.path.append(project_root)
     
 from sklearn.pipeline import Pipeline
 from typing import Dict

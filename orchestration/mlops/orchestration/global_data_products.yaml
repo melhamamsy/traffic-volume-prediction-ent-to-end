@@ -2,7 +2,7 @@ training_set:
   object_type: pipeline
   object_uuid: data_preparation
   outdated_after:
-    seconds: 700
+    seconds: 999999
   project: orchestration
   repo_path: /workspaces/traffic-volume-prediction-ent-to-end/orchestration/mlops/orchestration
   settings:
@@ -12,7 +12,7 @@ xgboost:
   object_type: pipeline
   object_uuid: xgboost_training
   outdated_after:
-    seconds: 700
+    seconds: 999999
   project: orchestration
   repo_path: /workspaces/traffic-volume-prediction-ent-to-end/orchestration/mlops/orchestration
   settings:

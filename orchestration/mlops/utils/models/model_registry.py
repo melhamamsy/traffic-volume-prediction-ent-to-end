@@ -4,6 +4,19 @@ from mlflow import register_model
 from mlflow.sklearn import load_model
 from mlflow.tracking import MlflowClient
 from sklearn.pipeline import Pipeline
+from pathlib import Path
+
+# Weird error without
+import os
+import sys
+
+project_root = Path(__file__).resolve().parents[2]
+# Check if the project root is already in sys.path, and add it if not
+if project_root not in sys.path:
+    sys.path.append(project_root)
+
+
+from mlops.utils.utils.server_reachability import is_server_reachable
 
 
 ### implement register_model_mlflow
@@ -13,7 +26,6 @@ def register_model_mlflow(
     run_name: str,
     name_to_register_with: str,
 ):
-
     client = MlflowClient(f"http://{tracking_server_host}:5000")
     experiment_id = client.get_experiment_by_name(mlflow_experiment_name).experiment_id
     
@@ -57,36 +69,48 @@ def load_registered_model_mlflow(
     mlflow_bucket_name: str
 ) -> List[Pipeline]:
 
-    client = MlflowClient(f"http://{tracking_server_host}:5000")
+    url = f"http://{tracking_server_host}:5000"
 
-    versions = client.search_model_versions(f"name='{model_name}'")
-    experiment_id = client.get_experiment_by_name(mlflow_experiment_name).experiment_id
-    
     model_versions = []
     models = {}
 
+    ## check is servers are up and running
+    if is_server_reachable(url):
+        client = MlflowClient(f"http://{tracking_server_host}:5000")
 
-    for version in versions:
-        model_version = {
-            "version": version.version,
-            "run_id": version.run_id,
-            "current_stage": version.current_stage,
-            "status": version.status,
-            "created_time": version.creation_timestamp,
-            "last_updated_time": version.last_updated_timestamp
-        }
-        model_versions.append(model_version)
+        versions = client.search_model_versions(f"name='{model_name}'")
+        experiment_id = client.get_experiment_by_name(mlflow_experiment_name).experiment_id
+        
 
-    model_versions = sorted(model_versions, key=lambda x: int(x['version']))[-n_latest_models:]
+        for version in versions:
+            model_version = {
+                "version": version.version,
+                "run_id": version.run_id,
+                "current_stage": version.current_stage,
+                "status": version.status,
+                "created_time": version.creation_timestamp,
+                "last_updated_time": version.last_updated_timestamp
+            }
+            model_versions.append(model_version)
 
-    for model_version in model_versions:
-        model_uri = f"s3://{mlflow_bucket_name}/{experiment_id}/{model_version['run_id']}/artifacts/models"
+        model_versions = sorted(model_versions, key=lambda x: int(x['version']))[-n_latest_models:]
 
-        print("Model uri of version", model_version["version"], end=": ")
-        print(model_uri)
+        for model_version in model_versions:
+            model_uri = f"s3://{mlflow_bucket_name}/{experiment_id}/{model_version['run_id']}/artifacts/models"
 
+            print("Model uri of version", model_version["version"], end=": ")
+            print(model_uri)
+
+            model = load_model(model_uri)
+            models[model_version["version"]] = model
+    else:
+        project_path = Path(__file__).resolve().parents[2]
+        model_uri = os.path.join(project_path,"models")
+        
         model = load_model(model_uri)
-        models[model_version["version"]] = model
+        models["1"] = model
+        models["2"] = model
+
 
     return models
 

@@ -112,7 +112,7 @@ variables:
   MLFLOW_EXPERIMENT_NAME: traffic-volume-prediction-mage
   N_BEST_MODELS: 2
   TARGET: traffic_volume
-  TRACKING_SERVER_HOST: ec2-13-53-200-152.eu-north-1.compute.amazonaws.com
+  TRACKING_SERVER_HOST: ec2-16-171-162-180.eu-north-1.compute.amazonaws.com
   name_to_register_with: traffic-volume-predictor
 variables_dir: /home/src/mage_data/orchestration
 widgets: []

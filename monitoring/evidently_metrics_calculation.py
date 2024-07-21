@@ -12,6 +12,8 @@ from utils.data_preparation.cleaning import correct_dtypes, remove_duplicates
 from utils.data_preparation.feature_selector import select_features
 
 import os
+import sys
+import argparse
 
 from evidently.report import Report
 from evidently import ColumnMapping
@@ -147,14 +149,20 @@ column_mapping = ColumnMapping(
 
 
 ########################################### Prepare Database ##########################################
-def prep_db():
+def prep_db(
+	dbname = "test", 
+	user = "postgres", 
+	password = "example", 
+	host = "localhost", 
+	port = "5432"
+):
 	with psycopg.connect(
-		"host=localhost port=5432 user=postgres password=example", autocommit=True) as conn:
-		res = conn.execute("SELECT 1 FROM pg_database WHERE datname='test'")
+		f"host={host} port={port} user={user} password={password}", autocommit=True) as conn:
+		res = conn.execute(f"SELECT 1 FROM pg_database WHERE datname='{dbname}'")
 		if len(res.fetchall()) == 0:
-			conn.execute("create database test;")
+			conn.execute(f"create database {dbname};")
 			with psycopg.connect(
-				"host=localhost port=5432 dbname=test user=postgres password=example") as conn:
+				f"host={host} port={port} dbname={dbname} user={user} password={password}") as conn:
 				conn.execute(create_table_statements)
 				conn.execute(insert_model_statements)
 #######################################################################################################
@@ -222,17 +230,35 @@ def calculate_metrics_postgresql(curr, start_date, end_date, model_id):
 
 
 ########################################### Prepare Database ##########################################
-START_DATE = pd.to_datetime('2017-01-01')
-END_DATE = pd.to_datetime('2018-10-01')
-REPORT_SPAN = 14 #days
+def batch_monitoring_backfill(
+		dbname = "test", 
+		user = "postgres", 
+		password = "example", 
+		host = "localhost", 
+		port = "5432", 
+		monitor_start_date = "2017-01-01", 
+		monitor_end_date = "2018-10-01", 
+		monitor_report_span = "14"
+):
+	
+	prep_db(
+		dbname = dbname, 
+		user = user, 
+		password = password, 
+		host = host, 
+		port = port
+	)	
 
-def batch_monitoring_backfill():
-	prep_db()
+	START_DATE = pd.to_datetime(monitor_start_date)
+	END_DATE = pd.to_datetime(monitor_end_date)
+	REPORT_SPAN = int(monitor_report_span) #days
+
+
 	last_send = datetime.datetime.now() - datetime.timedelta(seconds=10)
 	start_date = START_DATE
 	
 	with psycopg.connect(
-		"host=localhost port=5432 dbname=test user=postgres password=example", autocommit=True) as conn:
+		f"host={host} port={port} dbname={dbname} user={user} password={password}", autocommit=True) as conn:
 		
 		## select model_id
 		with conn.cursor() as curr:
@@ -268,4 +294,15 @@ def batch_monitoring_backfill():
 
 
 if __name__ == '__main__':
-	batch_monitoring_backfill()
+    parser = argparse.ArgumentParser(description='Check database tables, query models and metrics, and delete the database.')
+    parser.add_argument('--dbname', required=True, help='Name of the database')
+    parser.add_argument('--user', required=True, help='Database user')
+    parser.add_argument('--password', required=True, help='Database password')
+    parser.add_argument('--host', required=True, help='Database host')
+    parser.add_argument('--port', required=True, help='Database port')
+    parser.add_argument('--monitor_start_date', required=True, help='Start date for the monitoring period (YYYY-MM-DD)')
+    parser.add_argument('--monitor_end_date', required=True, help='End date for the monitoring period (YYYY-MM-DD)')
+    parser.add_argument('--monitor_report_span', required=True, type=int, help='Report span in days')
+
+    args = parser.parse_args()
+    batch_monitoring_backfill(args.dbname, args.user, args.password, args.host, args.port, args.monitor_start_date, args.monitor_end_date, args.monitor_report_span)
