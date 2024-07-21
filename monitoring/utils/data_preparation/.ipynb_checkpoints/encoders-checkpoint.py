@@ -1,7 +1,6 @@
+from pandas import DataFrame, Series
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.feature_extraction import DictVectorizer
-
-from pandas import DataFrame, Series
 
 
 class DictVectorizerTransformer(BaseEstimator, TransformerMixin):

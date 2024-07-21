@@ -14,7 +14,7 @@ def git_clone(repo_url: str, target_dir: str):
     if not os.path.isdir(target_dir):
         os.makedirs(target_dir, exist_ok=True)
     Repo.clone_from(repo_url, target_dir)
-    print(f'Repository cloned into: {target_dir}')
+    print(f"Repository cloned into: {target_dir}")
 
 
 def copy_files(source_dir: str, target_dir: str, file_extension: Optional[str] = None):
@@ -36,7 +36,7 @@ def copy_files(source_dir: str, target_dir: str, file_extension: Optional[str] =
                 )
                 os.makedirs(os.path.dirname(target_path), exist_ok=True)
                 shutil.copy(source_path, target_path)
-                print(f'Copied: {source_path} -> {target_path}')
+                print(f"Copied: {source_path} -> {target_path}")
 
 
 def remove_git_repository(repo_path: str):
@@ -45,4 +45,4 @@ def remove_git_repository(repo_path: str):
     """
     if os.path.isdir(repo_path):
         shutil.rmtree(repo_path)
-        print(f'Repository at {repo_path} has been removed.')
+        print(f"Repository at {repo_path} has been removed.")

@@ -1,22 +1,20 @@
-if 'data_exporter' not in globals():
+if "data_exporter" not in globals():
     from mage_ai.data_preparation.decorators import data_exporter
-if 'test' not in globals():
+if "test" not in globals():
     from mage_ai.data_preparation.decorators import test
 
-
-from pandas import DataFrame
 from typing import List, Tuple
-from sklearn.pipeline import Pipeline
-from mlops.utils.data_preparation.feature_engineering import FeatureEngineeringTransformer
-from mlops.utils.data_preparation.encoders import DictVectorizerTransformer
-from mlops.utils.data_preparation.splitters import split_on_date_time
 
+from mlops.utils.data_preparation.encoders import DictVectorizerTransformer
+from mlops.utils.data_preparation.feature_engineering import \
+    FeatureEngineeringTransformer
+from mlops.utils.data_preparation.splitters import split_on_date_time
+from pandas import DataFrame
+from sklearn.pipeline import Pipeline
 
 
 @data_exporter
-def export_data(
-    df, *args, **kwargs
-) -> Tuple[DataFrame, DataFrame, Pipeline]:
+def export_data(df, *args, **kwargs) -> Tuple[DataFrame, DataFrame, Pipeline]:
     """
     Exports data to some source.
 
@@ -31,57 +29,64 @@ def export_data(
 
     # Create the feature engineering pipeline
     # Not required to fit here as it would be part of the whole pipeline & fit in 1 call
-    feature_engineering_pipeline = Pipeline(steps=[
-        ('feature_engineering', FeatureEngineeringTransformer()),
-        ('vectorizer', DictVectorizerTransformer(False)),
-    ])
+    feature_engineering_pipeline = Pipeline(
+        steps=[
+            ("feature_engineering", FeatureEngineeringTransformer()),
+            ("vectorizer", DictVectorizerTransformer(False)),
+        ]
+    )
 
     # Split into training & validation data
     df_train, df_val = split_on_date_time(
-        df = df,
-        feature = kwargs["DATE_TIME"],
-        year = 2016,
-        drop_feature = False, #required in feature engineering class
-        return_indexes = False,
-    ) 
+        df=df,
+        feature=kwargs["DATE_TIME"],
+        year=2016,
+        drop_feature=False,  # required in feature engineering class
+        return_indexes=False,
+    )
 
     return df_train, df_val, feature_engineering_pipeline
 
 
 @test
 def test_returned_data_frames_lengths(
-    df_train: DataFrame, 
-    df_val: DataFrame, 
-    *args, **kwargs
+    df_train: DataFrame, df_val: DataFrame, *args, **kwargs
 ) -> None:
     assert df_train.__len__() > 1000, "few training observations"
     assert df_val.__len__() > 1000, "few validation observations"
 
+
 @test
 def test_returned_data_frames_columns(
-    df_train: DataFrame, 
-    df_val: DataFrame, 
-    *args, **kwargs
+    df_train: DataFrame, df_val: DataFrame, *args, **kwargs
 ) -> None:
 
-    columns = kwargs["COLUMNS"].split(",") + [kwargs["TARGET"]] + [kwargs["DATE_TIME"]]  + ["uuid"] 
-    assert list(df_train.columns) == list(df_val.columns) == columns, "Wrong columns representation" 
+    columns = (
+        kwargs["COLUMNS"].split(",")
+        + [kwargs["TARGET"]]
+        + [kwargs["DATE_TIME"]]
+        + ["uuid"]
+    )
+    assert (
+        list(df_train.columns) == list(df_val.columns) == columns
+    ), "Wrong columns representation"
 
 
 @test
 def test_feature_engineering_pipeline(
-    df_train: DataFrame, 
-    df_val: DataFrame, 
+    df_train: DataFrame,
+    df_val: DataFrame,
     feature_engineering_pipeline: Pipeline,
-    *args, **kwargs
+    *args,
+    **kwargs,
 ) -> None:
-    
+
     # Fit the pipeline with the training data
     feature_engineering_pipeline.fit(
         df_train.drop(kwargs["TARGET"], axis=1), df_train[kwargs["TARGET"]]
     )
 
-    columns = kwargs["COLUMNS"].split(",") + ["uuid"] + ['hour', 'month', 'day_of_week']
+    columns = kwargs["COLUMNS"].split(",") + ["uuid"] + ["hour", "month", "day_of_week"]
     weather_main_vals = [
         "Clear",
         "Clouds",
@@ -91,19 +96,16 @@ def test_feature_engineering_pipeline(
         "Mist",
         "Rain",
         "Snow",
-        "Thunderstorm"
-    ]  
-
-    columns = columns + [
-        f"weather_main={x}" for x in weather_main_vals
+        "Thunderstorm",
     ]
+
+    columns = columns + [f"weather_main={x}" for x in weather_main_vals]
     columns.remove("weather_main")
 
     # Transform on the dev data
     x_val = feature_engineering_pipeline.transform(
         df_val.drop(kwargs["TARGET"], axis=1),
     )
-
 
     assert x_val.__len__() == df_val.__len__()
     assert list(x_val.columns) == columns, "after transformation column mismatch"

@@ -3,10 +3,7 @@ from typing import List, Tuple, Union
 from pandas import DataFrame, Series
 
 
-def select_features(
-    df: DataFrame,
-    columns: List
-) -> Union[DataFrame, Series]:
+def select_features(df: DataFrame, columns: List) -> Union[DataFrame, Series]:
     """
     Select only passed columns
 

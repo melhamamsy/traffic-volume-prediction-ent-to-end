@@ -1,20 +1,20 @@
-if 'custom' not in globals():
+if "custom" not in globals():
     from mage_ai.data_preparation.decorators import custom
-if 'test' not in globals():
+if "test" not in globals():
     from mage_ai.data_preparation.decorators import test
 
 import os
-
-from pandas import DataFrame
 from typing import List, Tuple
-from sklearn.pipeline import Pipeline
+
 from mlops.utils.hyperparameters.hyperparameters_tuning import XGBoostFinetuner
+from pandas import DataFrame
+from sklearn.pipeline import Pipeline
 
 
 @custom
 def transform(
-    training_set: Tuple[DataFrame, DataFrame, Pipeline],
-    *args, **kwargs) -> None:
+    training_set: Tuple[DataFrame, DataFrame, Pipeline], *args, **kwargs
+) -> None:
     """
     Template code for a transformer block.
 
@@ -28,44 +28,35 @@ def transform(
     Returns:
         Anything (e.g. data frame, dictionary, array, int, str, etc.)
     """
-    os.environ['AWS_PROFILE'] = kwargs['AWS_PROFILE']
-    
+    os.environ["AWS_PROFILE"] = kwargs["AWS_PROFILE"]
+
     tracking_server_host = kwargs["TRACKING_SERVER_HOST"]
     mlflow_experiment_name = kwargs["MLFLOW_EXPERIMENT_NAME"]
     target_column = kwargs["TARGET"]
 
-    
     df_train, df_val, feature_engineering_pipeline = training_set["export"]
-    
 
-    X_train = df_train.drop(
-        ["uuid", target_column], axis = 1
-    )
+    X_train = df_train.drop(["uuid", target_column], axis=1)
     y_train = df_train[target_column]
 
-    X_val = df_val.drop(
-        ["uuid", target_column], axis = 1
-    )
+    X_val = df_val.drop(["uuid", target_column], axis=1)
     y_val = df_val[target_column]
-
 
     max_evals = kwargs["MAX_EVALS"]
     n_best_models = kwargs["N_BEST_MODELS"]
 
-      
     if kwargs["IS_RUN_FINE_TUNING"].upper() in {"Y", "YES"}:
         xgboost_finetuner = XGBoostFinetuner(
-            X_train, 
+            X_train,
             y_train,
-            X_val, 
+            X_val,
             y_val,
             tracking_server_host,
             mlflow_experiment_name,
             feature_engineering_pipeline,
             max_evals,
-            n_best_models
+            n_best_models,
         )
-
 
         xgboost_finetuner.finetune()
         print("Successfully completed finetuning...")

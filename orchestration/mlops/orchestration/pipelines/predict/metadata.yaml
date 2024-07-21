@@ -48,7 +48,7 @@ blocks:
   language: python
   name: inference
   retry_config: null
-  status: executed
+  status: updated
   timeout: null
   type: custom
   upstream_blocks:

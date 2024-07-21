@@ -1,23 +1,20 @@
+import os
 import subprocess
 
-from mlops.utils.deploy.terraform.constants import (
-    TERRAFORM_AWS_FULL_PATH,
-)
-
-import os
+from mlops.utils.deploy.terraform.constants import TERRAFORM_AWS_FULL_PATH
 
 
 def run_terraform_commands(subfolder: str) -> None:
     try:
         # Initialize the Terraform configuration in the specified subfolder
-        subprocess.run(['terraform', '-chdir=' + subfolder, 'init'], check=True)
+        subprocess.run(["terraform", "-chdir=" + subfolder, "init"], check=True)
         # Apply the Terraform configuration in the specified subfolder
         subprocess.run(
-            ['terraform', '-chdir=' + subfolder, 'apply', '-auto-approve'], check=True
+            ["terraform", "-chdir=" + subfolder, "apply", "-auto-approve"], check=True
         )
-        print(f'Terraform init and apply executed successfully in {subfolder}')
+        print(f"Terraform init and apply executed successfully in {subfolder}")
     except subprocess.CalledProcessError as err:
-        print(f'Error: {err}')
+        print(f"Error: {err}")
         raise err
 
 
@@ -25,25 +22,28 @@ def terraform_apply() -> None:
     run_terraform_commands(TERRAFORM_AWS_FULL_PATH)
 
 
-def terraform_destroy(database_password = None) -> None:       
+def terraform_destroy(database_password=None) -> None:
     try:
         if not is_terraform_initialized():
-            subprocess.run(['terraform', '-chdir=' + TERRAFORM_AWS_FULL_PATH, 'init'], check=True)
+            subprocess.run(
+                ["terraform", "-chdir=" + TERRAFORM_AWS_FULL_PATH, "init"], check=True
+            )
 
         subprocess.run(
             [
-                'terraform',
-                '-chdir=' + TERRAFORM_AWS_FULL_PATH,
-                'destroy',
-                '-auto-approve',
-                f'-var=database_password={database_password}'
+                "terraform",
+                "-chdir=" + TERRAFORM_AWS_FULL_PATH,
+                "destroy",
+                "-auto-approve",
+                f"-var=database_password={database_password}",
             ],
             check=True,
         )
-        print(f'Terraform destroy executed successfully in {TERRAFORM_AWS_FULL_PATH}')
+        print(f"Terraform destroy executed successfully in {TERRAFORM_AWS_FULL_PATH}")
     except subprocess.CalledProcessError as err:
-        print(f'Error: {err}')
+        print(f"Error: {err}")
         raise err
 
+
 def is_terraform_initialized():
-    return os.path.isdir('.terraform')
+    return os.path.isdir(".terraform")

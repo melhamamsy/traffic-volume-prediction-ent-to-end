@@ -1,9 +1,10 @@
 import os
 
 from mlops.utils.deploy.terraform.env_vars import set_environment_variables
-from mlops.utils.deploy.terraform.setup import download_terraform_configurations, setup_configurations
+from mlops.utils.deploy.terraform.setup import (
+    download_terraform_configurations, setup_configurations)
 
-if 'custom' not in globals():
+if "custom" not in globals():
     from mage_ai.data_preparation.decorators import custom
 
 
@@ -25,10 +26,9 @@ def setup(*args, **kwargs):
     project_name:
         "mlops"
     """
-    prevent_destroy_ecr = str(kwargs.get('prevent_destroy_ecr')).lower()
-    project_name = kwargs.get('project_name')
+    prevent_destroy_ecr = str(kwargs.get("prevent_destroy_ecr")).lower()
+    project_name = kwargs.get("project_name")
 
-  
     setup_configurations(
         prevent_destroy_ecr=prevent_destroy_ecr,
         project_name=project_name,
@@ -41,8 +41,8 @@ def setup(*args, **kwargs):
     demonstration purposes and for convenience.
     """
     set_environment_variables(
-        password=kwargs.get('password', os.getenv('POSTGRES_PASSWORD')),
-        username=kwargs.get('username', os.getenv('POSTGRES_USER')),
-        smtp_email=kwargs.get('smtp_email', os.getenv('SMTP_EMAIL')),
-        smtp_password=kwargs.get('smtp_password', os.getenv('SMTP_PASSWORD')),
+        password=kwargs.get("password", os.getenv("POSTGRES_PASSWORD")),
+        username=kwargs.get("username", os.getenv("POSTGRES_USER")),
+        smtp_email=kwargs.get("smtp_email", os.getenv("SMTP_EMAIL")),
+        smtp_password=kwargs.get("smtp_password", os.getenv("SMTP_PASSWORD")),
     )

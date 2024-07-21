@@ -1,5 +1,5 @@
-from sklearn.base import BaseEstimator, TransformerMixin
 from pandas import DataFrame, Series
+from sklearn.base import BaseEstimator, TransformerMixin
 
 
 class FeatureEngineeringTransformer(BaseEstimator, TransformerMixin):

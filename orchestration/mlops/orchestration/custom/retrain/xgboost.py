@@ -1,8 +1,8 @@
 from mage_ai.orchestration.triggers.api import trigger_pipeline
 
-if 'custom' not in globals():
+if "custom" not in globals():
     from mage_ai.data_preparation.decorators import custom
-if 'test' not in globals():
+if "test" not in globals():
     from mage_ai.data_preparation.decorators import test
 
 
@@ -19,13 +19,12 @@ def retrain(*args, **kwargs) -> None:
     }
 
     trigger_pipeline(
-        'xgboost_training',
+        "xgboost_training",
         variables=variables,
         check_status=True,
         error_on_failure=True,
-        schedule_name='Automatic retraining for xgboost models',
+        schedule_name="Automatic retraining for xgboost models",
         verbose=True,
     )
-
 
     return None

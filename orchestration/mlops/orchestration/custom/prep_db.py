@@ -1,6 +1,6 @@
-if 'custom' not in globals():
+if "custom" not in globals():
     from mage_ai.data_preparation.decorators import custom
-if 'test' not in globals():
+if "test" not in globals():
     from mage_ai.data_preparation.decorators import test
 
 
@@ -14,6 +14,7 @@ if project_root not in sys.path:
     sys.path.append(project_root)
 
 import psycopg
+
 
 @custom
 def prep_db(*args, **kwargs):

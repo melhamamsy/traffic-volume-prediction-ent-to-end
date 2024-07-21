@@ -14,9 +14,9 @@ from mlflow.sklearn import log_model as log_model_sklearn
 from mlflow.xgboost import log_model as log_model_xgboost
 from sklearn.base import BaseEstimator
 
-DEFAULT_DEVELOPER = os.getenv('EXPERIMENTS_DEVELOPER', 'mager')
-DEFAULT_EXPERIMENT_NAME = 'nyc-taxi-experiment'
-DEFAULT_TRACKING_URI = 'sqlite:///mlflow.db'
+DEFAULT_DEVELOPER = os.getenv("EXPERIMENTS_DEVELOPER", "mager")
+DEFAULT_EXPERIMENT_NAME = "nyc-taxi-experiment"
+DEFAULT_TRACKING_URI = "sqlite:///mlflow.db"
 
 
 def setup_experiment(
@@ -65,7 +65,7 @@ def track_experiment(
     client, experiment_id = setup_experiment(experiment_name, tracking_uri)
 
     if not run_name:
-        run_name = ':'.join(
+        run_name = ":".join(
             [str(s) for s in [pipeline_uuid, partition, block_uuid] if s]
         )
 
@@ -73,16 +73,16 @@ def track_experiment(
     run_id = run.info.run_id
 
     for key, value in [
-        ('developer', developer or DEFAULT_DEVELOPER),
-        ('model', model.__class__.__name__),
+        ("developer", developer or DEFAULT_DEVELOPER),
+        ("model", model.__class__.__name__),
     ]:
         if value is not None:
             client.set_tag(run_id, key, value)
 
     for key, value in [
-        ('block_uuid', block_uuid),
-        ('partition', partition),
-        ('pipeline_uuid', pipeline_uuid),
+        ("block_uuid", block_uuid),
+        ("partition", partition),
+        ("pipeline_uuid", pipeline_uuid),
     ]:
         if value is not None:
             client.log_param(run_id, key, value)
@@ -90,31 +90,35 @@ def track_experiment(
     for key, value in hyperparameters.items():
         client.log_param(run_id, key, value)
         if verbosity:
-            print(f'Logged hyperparameter {key}: {value}.')
+            print(f"Logged hyperparameter {key}: {value}.")
 
     for key, value in metrics.items():
         client.log_metric(run_id, key, value)
         if verbosity:
-            print(f'Logged metric {key}: {value}.')
+            print(f"Logged metric {key}: {value}.")
 
     dataset_inputs = []
 
     # This increases memory too much.
     if track_datasets:
         for dataset_name, dataset, tags in [
-            ('dataset', training_set, dict(context='training')),
+            ("dataset", training_set, dict(context="training")),
             (
-                'targets',
+                "targets",
                 training_targets.to_numpy() if training_targets is not None else None,
-                dict(context='training'),
+                dict(context="training"),
             ),
-            ('dataset', validation_set, dict(context='validation')),
+            ("dataset", validation_set, dict(context="validation")),
             (
-                'targets',
-                validation_targets.to_numpy() if validation_targets is not None else None,
-                dict(context='validation'),
+                "targets",
+                (
+                    validation_targets.to_numpy()
+                    if validation_targets is not None
+                    else None
+                ),
+                dict(context="validation"),
             ),
-            ('predictions', predictions, dict(context='training')),
+            ("predictions", predictions, dict(context="training")),
         ]:
             if dataset is None:
                 continue
@@ -127,17 +131,19 @@ def track_experiment(
 
             if dataset_from:
                 ds = dataset_from(dataset, name=dataset_name)._to_mlflow_entity()
-                ds_input = DatasetInput(ds, tags=[InputTag(k, v) for k, v in tags.items()])
+                ds_input = DatasetInput(
+                    ds, tags=[InputTag(k, v) for k, v in tags.items()]
+                )
                 dataset_inputs.append(ds_input)
 
             if verbosity:
-                context = tags['context']
+                context = tags["context"]
                 if dataset_from:
-                    print(f'Logged input for {context} {dataset_name}.')
+                    print(f"Logged input for {context} {dataset_name}.")
                 else:
                     print(
-                        f'Unable to log input for {context} {dataset_name}, '
-                        f'{type(dataset)} not registered.'
+                        f"Unable to log input for {context} {dataset_name}, "
+                        f"{type(dataset)} not registered."
                     )
 
         if len(dataset_inputs) >= 1:
@@ -152,13 +158,13 @@ def track_experiment(
             log_model = log_model_xgboost
 
         if log_model:
-            opts = dict(artifact_path='models', input_example=None)
+            opts = dict(artifact_path="models", input_example=None)
 
             if training_set is not None and predictions is not None:
-                opts['signature'] = infer_signature(training_set, predictions)
+                opts["signature"] = infer_signature(training_set, predictions)
 
             log_model(model, **opts)
             if verbosity:
-                print(f'Logged model {model.__class__.__name__}.')
+                print(f"Logged model {model.__class__.__name__}.")
 
     return run

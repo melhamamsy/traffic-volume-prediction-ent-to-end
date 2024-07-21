@@ -1,14 +1,13 @@
+# Weird error without
+import os
+import sys
+from pathlib import Path
 from typing import List
 
 from mlflow import register_model
 from mlflow.sklearn import load_model
 from mlflow.tracking import MlflowClient
 from sklearn.pipeline import Pipeline
-from pathlib import Path
-
-# Weird error without
-import os
-import sys
 
 project_root = Path(__file__).resolve().parents[2]
 # Check if the project root is already in sys.path, and add it if not
@@ -28,34 +27,26 @@ def register_model_mlflow(
 ):
     client = MlflowClient(f"http://{tracking_server_host}:5000")
     experiment_id = client.get_experiment_by_name(mlflow_experiment_name).experiment_id
-    
 
     run_id = client.search_runs(
-        experiment_ids=[f'{experiment_id}'],
-        filter_string = f'attribute.run_name = "{run_name}"'
+        experiment_ids=[f"{experiment_id}"],
+        filter_string=f'attribute.run_name = "{run_name}"',
     )[0].info.run_id
 
     ## TO implement read from s3 bucket directly instead
     model_uri = f"runs:/{run_id}/models"
 
-    
     if not client.search_registered_models(
         filter_string=f"name='{name_to_register_with}'"
     ):
         print(f"Registering new model {name_to_register_with}")
-        register_model(
-            model_uri=model_uri,
-            name=name_to_register_with
-        )
+        register_model(model_uri=model_uri, name=name_to_register_with)
     else:
         print(f"Model with name {name_to_register_with} is already registered...")
         print(f"Registering a new version to the model...")
         client.create_model_version(
-            name=name_to_register_with, 
-            source=model_uri, 
-            run_id=run_id
+            name=name_to_register_with, source=model_uri, run_id=run_id
         )
-
 
     print("Model was successfully registered...")
 
@@ -66,7 +57,7 @@ def load_registered_model_mlflow(
     n_latest_models: int,
     mlflow_experiment_name: str,
     tracking_server_host: str,
-    mlflow_bucket_name: str
+    mlflow_bucket_name: str,
 ) -> List[Pipeline]:
 
     url = f"http://{tracking_server_host}:5000"
@@ -79,8 +70,9 @@ def load_registered_model_mlflow(
         client = MlflowClient(f"http://{tracking_server_host}:5000")
 
         versions = client.search_model_versions(f"name='{model_name}'")
-        experiment_id = client.get_experiment_by_name(mlflow_experiment_name).experiment_id
-        
+        experiment_id = client.get_experiment_by_name(
+            mlflow_experiment_name
+        ).experiment_id
 
         for version in versions:
             model_version = {
@@ -89,11 +81,13 @@ def load_registered_model_mlflow(
                 "current_stage": version.current_stage,
                 "status": version.status,
                 "created_time": version.creation_timestamp,
-                "last_updated_time": version.last_updated_timestamp
+                "last_updated_time": version.last_updated_timestamp,
             }
             model_versions.append(model_version)
 
-        model_versions = sorted(model_versions, key=lambda x: int(x['version']))[-n_latest_models:]
+        model_versions = sorted(model_versions, key=lambda x: int(x["version"]))[
+            -n_latest_models:
+        ]
 
         for model_version in model_versions:
             model_uri = f"s3://{mlflow_bucket_name}/{experiment_id}/{model_version['run_id']}/artifacts/models"
@@ -105,22 +99,21 @@ def load_registered_model_mlflow(
             models[model_version["version"]] = model
     else:
         project_path = Path(__file__).resolve().parents[2]
-        model_uri = os.path.join(project_path,"models")
-        
+        model_uri = os.path.join(project_path, "models")
+
         model = load_model(model_uri)
         models["1"] = model
         models["2"] = model
-
 
     return models
 
 
 def delete_registered_model(tracking_server_host: str, model_name: str):
     client = MlflowClient(f"http://{tracking_server_host}:5000")
-    
+
     # List all versions of the model
     versions = client.search_model_versions(f"name='{model_name}'")
-    
+
     # Delete each version of the model
     for version in versions:
         client.delete_model_version(name=model_name, version=version.version)
@@ -129,6 +122,7 @@ def delete_registered_model(tracking_server_host: str, model_name: str):
     # Delete the registered model
     client.delete_registered_model(name=model_name)
     print(f"Deleted registered model {model_name}")
+
 
 def list_registered_models(tracking_server_host: str):
     client = MlflowClient(f"http://{tracking_server_host}:5000")

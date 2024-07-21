@@ -11,12 +11,12 @@ def extract_data(content: str) -> Optional[str]:
 
 
 def extract_var(content: str) -> Optional[str]:
-    pattern = r'vars\s*=\s*\{(?:[^{}]*(?:\{[^{}]*\}[^{}]*)*)\}'
+    pattern = r"vars\s*=\s*\{(?:[^{}]*(?:\{[^{}]*\}[^{}]*)*)\}"
     return re.search(pattern, content)
 
 
 def extract_dict_string(content: str) -> Dict:
-    pattern = r'\{((?:[^{}]*(?:\{[^{}]*\}[^{}]*)*))\}'
+    pattern = r"\{((?:[^{}]*(?:\{[^{}]*\}[^{}]*)*))\}"
     return re.search(pattern, content)
 
 
@@ -41,7 +41,7 @@ def update_text(content: str, variables: Optional[Dict]) -> str:
     dict_text = dict_match.group(1)
     stack.insert(0, (dict_match.span(1), var_text))
 
-    lines = dict_text.split('\n')
+    lines = dict_text.split("\n")
 
     variables = variables or {}
     mapping = {}
@@ -49,9 +49,9 @@ def update_text(content: str, variables: Optional[Dict]) -> str:
         line = line.strip()
         if not line:
             continue
-        parts = line.split('=')
+        parts = line.split("=")
         key = parts[0]
-        value = '='.join(parts[1:]).strip()
+        value = "=".join(parts[1:]).strip()
         mapping[key.strip()] = value
 
     combined = {**mapping, **variables}
@@ -62,9 +62,9 @@ def update_text(content: str, variables: Optional[Dict]) -> str:
             text = variables[key]
         else:
             text = value
-        lines_new.append(f'{key} = {text}')
+        lines_new.append(f"{key} = {text}")
 
-    content_new = '\n'.join(lines_new)
+    content_new = "\n".join(lines_new)
 
     while stack:
         match, text = stack.pop(0)
@@ -75,14 +75,14 @@ def update_text(content: str, variables: Optional[Dict]) -> str:
 
 
 def update_main_tf(file_path: Optional[str] = None, variables: Optional[Dict] = None):
-    file_path = file_path or os.path.join(TERRAFORM_AWS_FULL_PATH, 'main.tf')
+    file_path = file_path or os.path.join(TERRAFORM_AWS_FULL_PATH, "main.tf")
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
 
-    content = ''
+    content = ""
     if os.path.exists(file_path):
-        with open(file_path, 'r') as file:
+        with open(file_path, "r") as file:
             content = file.read()
 
     content = update_text(content, variables)
-    with open(file_path, 'w') as file:
+    with open(file_path, "w") as file:
         file.write(content)

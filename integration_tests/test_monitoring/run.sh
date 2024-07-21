@@ -13,19 +13,19 @@ monitor_report_span="14"
 
 
 cd $(dirname "$(realpath "$0")")
-cd ../../monitoring
+cd ../../
 
-docker-compose up -d
+docker-compose -f ./monitoring/docker-compose.yml up -d
 
 ERROR_CODE=$?
 
 if [ ${ERROR_CODE} != 0 ]; then
-    docker-compose logs >> integration_test.log
-    docker-compose down
+    docker-compose -f ./monitoring/docker-compose.yml logs
+    docker-compose -f ./monitoring/docker-compose.yml down
     exit ${ERROR_CODE}
 fi
 
-pipenv run python evidently_metrics_calculation.py \
+pipenv run python ./monitoring/evidently_metrics_calculation.py \
     --dbname $dbname \
     --user $user \
     --password $password \
@@ -39,12 +39,12 @@ pipenv run python evidently_metrics_calculation.py \
 ERROR_CODE=$?
 
 if [ ${ERROR_CODE} != 0 ]; then
-    docker-compose logs >> integration_test.log
-    docker-compose down
+    docker-compose -f ./monitoring/docker-compose.yml logs
+    docker-compose -f ./monitoring/docker-compose.yml down
     exit ${ERROR_CODE}
 fi
 
-pipenv run python ../integration_tests/test_monitoring/test_integration_monitoring.py \
+pipenv run python ./integration_tests/test_monitoring/test_integration_monitoring.py \
     --dbname $dbname \
     --user $user \
     --password $password \
@@ -57,10 +57,9 @@ pipenv run python ../integration_tests/test_monitoring/test_integration_monitori
 ERROR_CODE=$?
 
 if [ ${ERROR_CODE} != 0 ]; then
-    docker-compose logs >> integration_test.log
-    docker-compose down
+    docker-compose -f ./monitoring/docker-compose.yml logs 
+    docker-compose -f ./monitoring/docker-compose.yml down
     exit ${ERROR_CODE}
 fi
 
-docker-compose logs >> integration_test.log
-docker-compose down
+docker-compose -f ./monitoring/docker-compose.yml down

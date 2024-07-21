@@ -1,7 +1,5 @@
 import pandas as pd
-
 from mage_ai.shared.parsers import convert_matrix_to_dataframe
-
 
 if isinstance(df_1, list) and len(df_1) >= 1:
     item = df_1[0]

@@ -1,10 +1,7 @@
 from pandas import DataFrame, to_datetime
 
 
-def correct_dtypes(
-    df: DataFrame,
-    **kwargs
-) -> DataFrame:
+def correct_dtypes(df: DataFrame, **kwargs) -> DataFrame:
     """
     Correct dtypes of the columns of the DataFrame
     """
@@ -27,4 +24,4 @@ def remove_duplicates(
     Drops duplicates of the DataFrame
     """
 
-    return df.drop_duplicates(keep='last').reset_index(drop=True)
+    return df.drop_duplicates(keep="last").reset_index(drop=True)
