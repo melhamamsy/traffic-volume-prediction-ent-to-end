@@ -104,6 +104,7 @@ The DNS name of the machine will be needed as well, will be used later as the va
 # 4.    Workflow
 
 - **Diagram:**
+![image](https://github.com/user-attachments/assets/0952637e-307e-4896-95f1-553d439be53e)
 
 - **Details:**
 
