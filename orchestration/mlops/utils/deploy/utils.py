@@ -1,8 +1,12 @@
 import json
 
 import boto3
-from botocore.exceptions import (ClientError, NoCredentialsError,
-                                 PartialCredentialsError, ProfileNotFound)
+from botocore.exceptions import (
+    ClientError,
+    NoCredentialsError,
+    PartialCredentialsError,
+    ProfileNotFound,
+)
 
 
 def list_policy_versions(policy_arn):

@@ -1,8 +1,16 @@
 from mlops.utils.deploy.aws import (
-    IAM_USER_NAME, POLICY_NAME_TERRAFORM_APPLY_DEPLOY_MAGE,
-    POLICY_NAME_TERRAFORM_DESTROY_DELETE_RESOURCES, TERRAFORM_APPLY_URL,
-    TERRAFORM_DESTROY_URL, attach_policy_to_user, create_access_key_for_user,
-    create_policy, create_user, reset, save_credentials_to_file)
+    IAM_USER_NAME,
+    POLICY_NAME_TERRAFORM_APPLY_DEPLOY_MAGE,
+    POLICY_NAME_TERRAFORM_DESTROY_DELETE_RESOURCES,
+    TERRAFORM_APPLY_URL,
+    TERRAFORM_DESTROY_URL,
+    attach_policy_to_user,
+    create_access_key_for_user,
+    create_policy,
+    create_user,
+    reset,
+    save_credentials_to_file,
+)
 
 if "custom" not in globals():
     from mage_ai.data_preparation.decorators import custom
@@ -10,11 +18,16 @@ if "custom" not in globals():
 import configparser
 import os
 
-from mlops.utils.deploy.utils import (check_policy_action, get_aws_credentials,
-                                      get_policy_arn,
-                                      is_policy_attached_to_user,
-                                      policy_exists_by_name, profile_exists,
-                                      update_policy, user_exists)
+from mlops.utils.deploy.utils import (
+    check_policy_action,
+    get_aws_credentials,
+    get_policy_arn,
+    is_policy_attached_to_user,
+    policy_exists_by_name,
+    profile_exists,
+    update_policy,
+    user_exists,
+)
 
 
 @custom

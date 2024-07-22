@@ -2,8 +2,7 @@ import json
 import os
 from typing import Optional
 
-from mlops.utils.deploy.terraform.constants import (ENV_VARS_KEY,
-                                                    TERRAFORM_AWS_FULL_PATH)
+from mlops.utils.deploy.terraform.constants import ENV_VARS_KEY, TERRAFORM_AWS_FULL_PATH
 from mlops.utils.deploy.terraform.main_variables import update_main_tf
 from mlops.utils.deploy.terraform.variables import update_variables
 

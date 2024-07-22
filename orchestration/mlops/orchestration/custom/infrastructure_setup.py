@@ -2,7 +2,9 @@ import os
 
 from mlops.utils.deploy.terraform.env_vars import set_environment_variables
 from mlops.utils.deploy.terraform.setup import (
-    download_terraform_configurations, setup_configurations)
+    download_terraform_configurations,
+    setup_configurations,
+)
 
 if "custom" not in globals():
     from mage_ai.data_preparation.decorators import custom

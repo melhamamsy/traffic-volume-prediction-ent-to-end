@@ -122,17 +122,9 @@ if __name__ == "__main__":
     parser.add_argument("--password", required=True)
     parser.add_argument("--host", required=True)
     parser.add_argument("--port", required=True)
-    parser.add_argument(
-        "--monitor_start_date",
-        required=True
-    )
-    parser.add_argument(
-        "--monitor_end_date",
-        required=True
-    )
-    parser.add_argument(
-        "--monitor_report_span", required=True, type=int
-    )
+    parser.add_argument("--monitor_start_date", required=True)
+    parser.add_argument("--monitor_end_date", required=True)
+    parser.add_argument("--monitor_report_span", required=True, type=int)
 
     args = parser.parse_args()
     main(

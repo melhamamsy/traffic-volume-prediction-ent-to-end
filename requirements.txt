@@ -17,3 +17,4 @@ psutil==5.9.8
 lz4==4.3.3
 mlflow==2.14.2
 packaging==23.2
+hyperopt

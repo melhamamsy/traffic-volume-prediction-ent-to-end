@@ -6,8 +6,9 @@ if "test" not in globals():
 from typing import List, Tuple
 
 from mlops.utils.data_preparation.encoders import DictVectorizerTransformer
-from mlops.utils.data_preparation.feature_engineering import \
-    FeatureEngineeringTransformer
+from mlops.utils.data_preparation.feature_engineering import (
+    FeatureEngineeringTransformer,
+)
 from mlops.utils.data_preparation.splitters import split_on_date_time
 from pandas import DataFrame
 from sklearn.pipeline import Pipeline

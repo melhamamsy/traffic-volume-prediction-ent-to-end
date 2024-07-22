@@ -1,19 +1,27 @@
 import os
+import sys
 
 import mlflow
 import pytest
 from mlflow.tracking import MlflowClient
+
+parent_path = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.append(parent_path)
+sys.path.append(os.path.join(parent_path, "orchestration"))
+sys.path.append(os.path.join(parent_path, "orchestration/mlops"))
+sys.path.append(os.path.join(parent_path, "deployment"))
+
+tracking_server_host = "ec2-16-170-228-131.eu-north-1.compute.amazonaws.com"
+experiment_name = "testing_experiment"
 
 
 @pytest.fixture(scope="session")
 def set_tracking_uri():
     os.environ["AWS_PROFILE"] = "test-mlops"
 
-    tracking_server_host = "ec2-13-60-24-194.eu-north-1.compute.amazonaws.com"
     mlflow.set_tracking_uri(f"http://{tracking_server_host}:5000")
     print("Tracking URI set to:", mlflow.get_tracking_uri())
 
-    experiment_name = "testing_experiment"
     try:
         experiment_id = mlflow.create_experiment(experiment_name)
         print(f"Created experiment '{experiment_name}' with ID {experiment_id}")
@@ -35,9 +43,7 @@ def set_tracking_uri():
 def cleanup_runs():
     os.environ["AWS_PROFILE"] = "test-mlops"
 
-    experiment_name = "testing_experiment"
     mlflow.set_experiment(experiment_name)
-    tracking_server_host = "ec2-13-60-24-194.eu-north-1.compute.amazonaws.com"
     mlflow.set_tracking_uri(f"http://{tracking_server_host}:5000")
 
     experiment = mlflow.get_experiment_by_name(experiment_name)
@@ -54,12 +60,9 @@ def cleanup_runs():
 def cleanup_registry():
     os.environ["AWS_PROFILE"] = "test-mlops"
 
-    experiment_name = "testing_experiment"
     mlflow.set_experiment(experiment_name)
-    tracking_server_host = "ec2-13-60-24-194.eu-north-1.compute.amazonaws.com"
     mlflow.set_tracking_uri(f"http://{tracking_server_host}:5000")
 
-    tracking_server_host = "ec2-13-60-24-194.eu-north-1.compute.amazonaws.com"
     model_name = "test_model"
     client = MlflowClient(f"http://{tracking_server_host}:5000")
 

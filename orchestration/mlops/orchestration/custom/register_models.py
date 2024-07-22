@@ -14,8 +14,10 @@ if project_root not in sys.path:
 
 from typing import Dict
 
-from mlops.utils.models.model_registry import (load_registered_model_mlflow,
-                                               register_model_mlflow)
+from mlops.utils.models.model_registry import (
+    load_registered_model_mlflow,
+    register_model_mlflow,
+)
 from sklearn.pipeline import Pipeline
 
 

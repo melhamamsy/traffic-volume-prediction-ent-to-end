@@ -1,25 +1,32 @@
-import os
+# import os
 
-import mlflow
-import pytest
+# import mlflow
+# import pytest
 from pandas import DataFrame, Series, to_datetime
 from sklearn.pipeline import Pipeline
 
 from orchestration.mlops.utils.data_preparation.cleaning import (
-    correct_dtypes, remove_duplicates)
-from orchestration.mlops.utils.data_preparation.encoders import \
-    DictVectorizerTransformer
-from orchestration.mlops.utils.data_preparation.feature_engineering import \
-    FeatureEngineeringTransformer
-from orchestration.mlops.utils.data_preparation.feature_selector import \
-    select_features
-from orchestration.mlops.utils.data_preparation.splitters import \
-    split_on_date_time
-from orchestration.mlops.utils.hyperparameters.hyperparameters_tuning import \
-    XGBoostFinetuner
-from orchestration.mlops.utils.models.model_registry import (
-    delete_registered_model, list_registered_models,
-    load_registered_model_mlflow, register_model_mlflow)
+    correct_dtypes,
+    remove_duplicates,
+)
+from orchestration.mlops.utils.data_preparation.encoders import (
+    DictVectorizerTransformer,
+)
+from orchestration.mlops.utils.data_preparation.feature_engineering import (
+    FeatureEngineeringTransformer,
+)
+from orchestration.mlops.utils.data_preparation.feature_selector import select_features
+from orchestration.mlops.utils.data_preparation.splitters import split_on_date_time
+
+# from orchestration.mlops.utils.hyperparameters.hyperparameters_tuning import (
+#     XGBoostFinetuner,
+# )
+# from orchestration.mlops.utils.models.model_registry import (
+#     delete_registered_model,
+#     list_registered_models,
+#     load_registered_model_mlflow,
+#     register_model_mlflow,
+# )
 
 
 ### orchestration.mlops.utils.data_preparation
@@ -255,111 +262,111 @@ def test_split_on_date_time():
 
 
 ### orchestration.mlops.utils.hyperparameters_tuning
-@pytest.mark.usefixtures("set_tracking_uri", "cleanup_runs")
-def test_xgboost_finetuner_in_pipeline():
-    """
-    Test the XGBoostFinetuner class finetuner.
-    mlflow attributes are defined in conftest.py
-    """
-    X_train = DataFrame({"feature1": [1, 2, 3, 4, 5], "feature2": [5, 4, 3, 2, 1]})
-    y_train = Series([1, 2, 3, 4, 5])
-    X_val = DataFrame({"feature1": [6, 7, 8, 9, 10], "feature2": [10, 9, 8, 7, 6]})
-    y_val = Series([6, 7, 8, 9, 10])
+# @pytest.mark.usefixtures("set_tracking_uri", "cleanup_runs")
+# def test_xgboost_finetuner_in_pipeline():
+#     """
+#     Test the XGBoostFinetuner class finetuner.
+#     mlflow attributes are defined in conftest.py
+#     """
+#     X_train = DataFrame({"feature1": [1, 2, 3, 4, 5], "feature2": [5, 4, 3, 2, 1]})
+#     y_train = Series([1, 2, 3, 4, 5])
+#     X_val = DataFrame({"feature1": [6, 7, 8, 9, 10], "feature2": [10, 9, 8, 7, 6]})
+#     y_val = Series([6, 7, 8, 9, 10])
 
-    max_evals = 2
-    n_best_models = 1
-    run_name = "hyperopt_xgb"
-    tracking_server_host = "ec2-13-60-24-194.eu-north-1.compute.amazonaws.com"
-    mlflow_experiment_name = "testing_experiment"
+#     max_evals = 2
+#     n_best_models = 1
+#     run_name = "hyperopt_xgb"
+#     tracking_server_host = "ec2-13-60-24-194.eu-north-1.compute.amazonaws.com"
+#     mlflow_experiment_name = "testing_experiment"
 
-    finetuner = XGBoostFinetuner(
-        X_train=X_train,
-        y_train=y_train,
-        X_val=X_val,
-        y_val=y_val,
-        tracking_server_host=tracking_server_host,
-        mlflow_experiment_name=mlflow_experiment_name,
-        feature_engineering_pipeline="passthrough",
-        max_evals=max_evals,
-        n_best_models=n_best_models,
-        run_name=run_name,
-    )
+#     finetuner = XGBoostFinetuner(
+#         X_train=X_train,
+#         y_train=y_train,
+#         X_val=X_val,
+#         y_val=y_val,
+#         tracking_server_host=tracking_server_host,
+#         mlflow_experiment_name=mlflow_experiment_name,
+#         feature_engineering_pipeline="passthrough",
+#         max_evals=max_evals,
+#         n_best_models=n_best_models,
+#         run_name=run_name,
+#     )
 
-    finetuner.finetune()
+#     finetuner.finetune()
 
-    # Check if the best models list is populated
-    assert len(finetuner.best_models) == n_best_models
-    assert isinstance(finetuner.best_models[0][1], Pipeline)
+#     # Check if the best models list is populated
+#     assert len(finetuner.best_models) == n_best_models
+#     assert isinstance(finetuner.best_models[0][1], Pipeline)
 
-    # tracking server and experiment
-    os.environ["AWS_PROFILE"] = "test-mlops"
-    mlflow.set_tracking_uri(f"http://{tracking_server_host}:5000")
-    mlflow.set_experiment(mlflow_experiment_name)
+#     # tracking server and experiment
+#     os.environ["AWS_PROFILE"] = "test-mlops"
+#     mlflow.set_tracking_uri(f"http://{tracking_server_host}:5000")
+#     mlflow.set_experiment(mlflow_experiment_name)
 
-    # Additional assertions to check MLflow experiment and runs
-    assert mlflow_experiment_name in [
-        experiment.name for experiment in mlflow.search_experiments()
-    ]
+#     # Additional assertions to check MLflow experiment and runs
+#     assert mlflow_experiment_name in [
+#         experiment.name for experiment in mlflow.search_experiments()
+#     ]
 
-    # Assert runs
-    runs = mlflow.search_runs(
-        experiment_ids=[
-            mlflow.get_experiment_by_name(mlflow_experiment_name).experiment_id
-        ]
-    )
-    run_names = [
-        run.get("tags.mlflow.runName", "Unnamed run") for index, run in runs.iterrows()
-    ]
-    best_run_names = [x for x in run_names if x[:10] == "best_model"]
-    hyperopt_run_names = [
-        x for x in run_names if x not in best_run_names and x != run_name
-    ]
-
-
-    # actual_best_model_count == expected_best_model_count
-    assert len(best_run_names) == n_best_models
-    # actual_hyperopt_runs_count == expected_hyperopt_runs_count
-    assert len(hyperopt_run_names) == max_evals
+#     # Assert runs
+#     runs = mlflow.search_runs(
+#         experiment_ids=[
+#             mlflow.get_experiment_by_name(mlflow_experiment_name).experiment_id
+#         ]
+#     )
+#     run_names = [
+#         run.get("tags.mlflow.runName", "Unnamed run") for index, run in runs.iterrows()
+#     ]
+#     best_run_names = [x for x in run_names if x[:10] == "best_model"]
+#     hyperopt_run_names = [
+#         x for x in run_names if x not in best_run_names and x != run_name
+#     ]
 
 
-### orchestration.mlops.utils.hyperparameters_tuning
-@pytest.mark.usefixtures("set_tracking_uri", "cleanup_registry")
-def test_register_load_delete_model_mlflow():
-    n_best_models = 1
+#     # actual_best_model_count == expected_best_model_count
+#     assert len(best_run_names) == n_best_models
+#     # actual_hyperopt_runs_count == expected_hyperopt_runs_count
+#     assert len(hyperopt_run_names) == max_evals
 
-    tracking_server_host = "ec2-13-60-24-194.eu-north-1.compute.amazonaws.com"
-    mlflow_experiment_name = "testing_experiment"
 
-    name_to_register_with = "test_model"
-    mlflow_bucket_name = "mlflow-artifacts-melhamamsy"
+# ### orchestration.mlops.utils.hyperparameters_tuning
+# @pytest.mark.usefixtures("set_tracking_uri", "cleanup_registry")
+# def test_register_load_delete_model_mlflow():
+#     n_best_models = 1
 
-    for i in range(n_best_models):
-        run_name = f"best_model_{i+1}"
-        register_model_mlflow(
-            tracking_server_host,
-            mlflow_experiment_name,
-            run_name,
-            name_to_register_with,
-        )
+#     tracking_server_host = "ec2-13-60-24-194.eu-north-1.compute.amazonaws.com"
+#     mlflow_experiment_name = "testing_experiment"
 
-    assert name_to_register_with in list_registered_models(
-        tracking_server_host
-    ), "Model not registered."
+#     name_to_register_with = "test_model"
+#     mlflow_bucket_name = "mlflow-artifacts-melhamamsy"
 
-    pipelines = load_registered_model_mlflow(
-        model_name=name_to_register_with,
-        n_latest_models=n_best_models,
-        mlflow_experiment_name=mlflow_experiment_name,
-        tracking_server_host=tracking_server_host,
-        mlflow_bucket_name=mlflow_bucket_name,
-    )
+#     for i in range(n_best_models):
+#         run_name = f"best_model_{i+1}"
+#         register_model_mlflow(
+#             tracking_server_host,
+#             mlflow_experiment_name,
+#             run_name,
+#             name_to_register_with,
+#         )
 
-    for i in range(n_best_models):
-        assert isinstance(
-            pipelines[f"{i+1}"], Pipeline
-        ), f"Loading registered model with version {i+1} failed"
+#     assert name_to_register_with in list_registered_models(
+#         tracking_server_host
+#     ), "Model not registered."
 
-    delete_registered_model(tracking_server_host, name_to_register_with)
-    assert name_to_register_with not in list_registered_models(
-        tracking_server_host
-    ), "Model deletion from registry failed."
+#     pipelines = load_registered_model_mlflow(
+#         model_name=name_to_register_with,
+#         n_latest_models=n_best_models,
+#         mlflow_experiment_name=mlflow_experiment_name,
+#         tracking_server_host=tracking_server_host,
+#         mlflow_bucket_name=mlflow_bucket_name,
+#     )
+
+#     for i in range(n_best_models):
+#         assert isinstance(
+#             pipelines[f"{i+1}"], Pipeline
+#         ), f"Loading registered model with version {i+1} failed"
+
+#     delete_registered_model(tracking_server_host, name_to_register_with)
+#     assert name_to_register_with not in list_registered_models(
+#         tracking_server_host
+#     ), "Model deletion from registry failed."

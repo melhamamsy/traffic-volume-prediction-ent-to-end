@@ -3,12 +3,13 @@ import re
 from tempfile import TemporaryDirectory
 from typing import Optional
 
-from mlops.utils.deploy.github import (copy_files, git_clone,
-                                       remove_git_repository)
-from mlops.utils.deploy.terraform.constants import (ENV_VARS_KEY,
-                                                    TERRAFORM_AWS_FULL_PATH,
-                                                    TERRAFORM_AWS_NAME,
-                                                    TERRAFORM_REPO_URL)
+from mlops.utils.deploy.github import copy_files, git_clone, remove_git_repository
+from mlops.utils.deploy.terraform.constants import (
+    ENV_VARS_KEY,
+    TERRAFORM_AWS_FULL_PATH,
+    TERRAFORM_AWS_NAME,
+    TERRAFORM_REPO_URL,
+)
 from mlops.utils.deploy.terraform.env_vars import update_json_file
 from mlops.utils.deploy.terraform.variables import update_variables
 

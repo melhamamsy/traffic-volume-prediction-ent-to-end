@@ -3,8 +3,7 @@ if "transformer" not in globals():
 if "test" not in globals():
     from mage_ai.data_preparation.decorators import test
 
-from mlops.utils.data_preparation.cleaning import (correct_dtypes,
-                                                   remove_duplicates)
+from mlops.utils.data_preparation.cleaning import correct_dtypes, remove_duplicates
 from mlops.utils.data_preparation.feature_selector import select_features
 from mlops.utils.utils.uuid import create_uuid_col
 

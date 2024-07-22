@@ -1,9 +1,13 @@
-from mlops.utils.deploy.aws import (GITHUB_ACTIONS_DEPLOY_URL,
-                                    IAM_USER_NAME_CICD,
-                                    POLICY_NAME_GITHUB_ACTIONS_DEPLOY_MAGE,
-                                    attach_policy_to_user,
-                                    create_access_key_for_user, create_policy,
-                                    create_user, save_credentials_to_file)
+from mlops.utils.deploy.aws import (
+    GITHUB_ACTIONS_DEPLOY_URL,
+    IAM_USER_NAME_CICD,
+    POLICY_NAME_GITHUB_ACTIONS_DEPLOY_MAGE,
+    attach_policy_to_user,
+    create_access_key_for_user,
+    create_policy,
+    create_user,
+    save_credentials_to_file,
+)
 
 if "custom" not in globals():
     from mage_ai.data_preparation.decorators import custom

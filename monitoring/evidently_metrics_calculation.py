@@ -8,8 +8,11 @@ import warnings
 import pandas as pd
 import psycopg
 from evidently import ColumnMapping
-from evidently.metrics import (ColumnDriftMetric, DatasetDriftMetric,
-                               DatasetMissingValuesMetric)
+from evidently.metrics import (
+    ColumnDriftMetric,
+    DatasetDriftMetric,
+    DatasetMissingValuesMetric,
+)
 from evidently.report import Report
 from mlflow.sklearn import load_model
 from psycopg.errors import UniqueViolation
@@ -27,8 +30,10 @@ STATTEST_THRESHOLD = 1.5
 
 
 ########################## Model pipeline ##########################
-logged_model_s3 = "s3://mlflow-artifacts-melhamamsy/"+\
-    "2/c6343316f0c64d0ea822e39d8820e3db/artifacts/models"
+logged_model_s3 = (
+    "s3://mlflow-artifacts-melhamamsy/"
+    + "2/c6343316f0c64d0ea822e39d8820e3db/artifacts/models"
+)
 script_dir = os.path.dirname(os.path.abspath(__file__))
 logged_model = f"{script_dir}/models"
 pipeline = load_model(logged_model)
@@ -237,6 +242,7 @@ def get_model_id(conn):
         curr.execute(f"SELECT id FROM models WHERE path='{logged_model_s3}'")
         return int(curr.fetchone()[0])
 
+
 def calculate_and_sleep(curr, start_date, end_date, model_id, last_send, send_timeout):
     calculate_metrics_postgresql(curr, start_date, end_date, model_id)
     new_send = datetime.datetime.now()
@@ -247,6 +253,7 @@ def calculate_and_sleep(curr, start_date, end_date, model_id, last_send, send_ti
         last_send = last_send + datetime.timedelta(seconds=10)
     logging.info("data sent")
     return new_send
+
 
 def batch_monitoring_backfill(
     dbname="test",
@@ -280,7 +287,8 @@ def batch_monitoring_backfill(
 
             with conn.cursor() as curr:
                 last_send = calculate_and_sleep(
-                    curr, start_date, end_date, model_id, last_send, SEND_TIMEOUT)
+                    curr, start_date, end_date, model_id, last_send, SEND_TIMEOUT
+                )
 
             start_date = end_date
 
