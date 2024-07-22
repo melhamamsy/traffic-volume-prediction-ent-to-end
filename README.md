@@ -103,7 +103,9 @@ The DNS name of the machine will be needed as well, will be used later as the va
 
 # 4.    Workflow
 
-- Diagram
+- **Diagram:**
+
+- **Details:**
 
     ## 4.1  Data Location
     - Simulated an s3 bucket as the source of data since the data is static. _Note: this is a different bucket than that used to store mlflow artifacts_. The name of the bucket is important as it'll be passed as a variable in `mage` pipelines.
